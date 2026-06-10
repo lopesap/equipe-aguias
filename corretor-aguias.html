@@ -414,9 +414,32 @@ function maskDValor(input){
 }
 
 function salvarNome(){
+  const nomeAnterior=nome;
   nome=document.getElementById('inp-nome').value.trim();
   localStorage.setItem('aguias_corretor_nome',nome);
   document.getElementById('headerUser').textContent=nome?'Olá, '+nome+'! 🦅':'';
+  // Autocadastro: envia pro Sheets na primeira vez que o nome é definido
+  if(nome&&nome!==nomeAnterior&&!localStorage.getItem('aguias_cadastro_enviado_'+nome)){
+    autocadastrarNoSheets(nome);
+  }
+}
+
+async function autocadastrarNoSheets(nomeCorretor){
+  try{
+    await fetch(SHEETS_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'salvarCadastro',
+        id:Date.now(),
+        nome:nomeCorretor,
+        tel:'',status:'pendente',
+        obs:'Autocadastro via App Corretor',
+        creci:'sem',
+      })
+    });
+    localStorage.setItem('aguias_cadastro_enviado_'+nomeCorretor,'1');
+  }catch(e){}
 }
 
 // ── AVISO META ──
