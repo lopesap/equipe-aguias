@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APP-ASSISTENTE-BEATRIZ — Equipe Águias</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--gold-dark:#9E7A2E;--dark:#0A0A0A;--dark2:#141414;--dark3:#1E1E1E;--dark4:#282828;--cream:#F0E8D0;--text:#D4C9A8;--muted:#7A7060;--c1:#4A90D9;--c2:#9B8EC4;--c3:#E8943A;--c4:#4CAF82;--c5:#C0392B;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 40% at 80% 5%,rgba(201,168,76,.05) 0%,transparent 55%);pointer-events:none;z-index:0;}
+.header{position:relative;z-index:1;text-align:center;padding:22px 20px 14px;border-bottom:1px solid rgba(201,168,76,.1);}
+.logo{width:58px;height:58px;object-fit:contain;border-radius:10px;filter:drop-shadow(0 0 12px rgba(201,168,76,.45));margin-bottom:7px;}
+.header h1{font-family:'Cinzel',serif;font-size:clamp(14px,3.5vw,20px);font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;}
+.header-sub{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.header-user{font-size:12px;color:rgba(201,168,76,.7);margin-top:4px;font-weight:600;}
+.tabs{display:flex;background:rgba(10,10,10,.97);border-bottom:1px solid rgba(255,255,255,.05);position:sticky;top:0;z-index:100;}
+.tab-btn{flex:1;padding:10px 3px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.page{position:relative;z-index:1;max-width:600px;margin:0 auto;padding:14px 13px 60px;}
+.section{display:none;}.section.active{display:block;}
+.card{background:var(--dark2);border:1px solid rgba(201,168,76,.1);border-radius:14px;padding:15px;margin-bottom:11px;}
+.card-title{font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.field{display:flex;flex-direction:column;gap:3px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.field input,.field select,.field textarea{background:var(--dark3);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:9px 11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;outline:none;transition:border-color .2s;width:100%;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(201,168,76,.4);}
+.field select option{background:var(--dark3);}
+.field textarea{resize:vertical;min-height:60px;line-height:1.5;}
+.field input.gold{border-color:rgba(201,168,76,.25);}
+
+/* BADGES */
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.5px;}
+.badge-ativo{background:rgba(76,175,130,.1);border:1px solid rgba(76,175,130,.25);color:var(--c4);}
+.badge-inativo{background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);color:var(--c5);}
+.badge-treinamento{background:rgba(74,144,217,.08);border:1px solid rgba(74,144,217,.2);color:var(--c1);}
+.badge-pendente{background:rgba(232,148,58,.08);border:1px solid rgba(232,148,58,.2);color:var(--c3);}
+
+/* LISTA CORRETORES */
+.corretor-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:11px;padding:12px 13px;margin-bottom:8px;transition:border-color .2s;}
+.corretor-item:hover{border-color:rgba(201,168,76,.2);}
+.corretor-item.selected{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.04);}
+.ci-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;gap:6px;}
+.ci-name{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--cream);}
+.ci-apelido{font-size:10px;color:var(--gold);opacity:.7;font-style:italic;margin-left:4px;}
+.ci-acoes{display:flex;gap:4px;flex-shrink:0;}
+.ci-info{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:5px;}
+.ci-stat{font-size:10px;color:var(--muted);}
+.ci-stat b{color:var(--text);}
+
+/* MINI PROGRESS */
+.mini-progress-wrap{margin-top:5px;}
+.mini-progress{height:3px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;}
+.mini-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .5s;}
+.mini-pct{font-size:9px;color:var(--muted);margin-top:3px;}
+
+/* CRECI 3 estágios */
+.creci-box{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.18);border-radius:9px;padding:11px 13px;margin-top:8px;}
+.creci-label{font-size:11px;color:var(--text);margin-bottom:7px;font-weight:600;}
+.creci-stages{display:flex;gap:5px;flex-wrap:wrap;}
+.creci-stage-btn{padding:5px 11px;border-radius:20px;border:1px solid rgba(255,255,255,.1);background:transparent;font-size:10px;font-weight:700;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .2s;}
+.creci-stage-btn.active-sem{background:rgba(192,57,43,.1);border-color:rgba(192,57,43,.25);color:var(--c5);}
+.creci-stage-btn.active-est{background:rgba(232,148,58,.1);border-color:rgba(232,148,58,.25);color:var(--c3);}
+.creci-stage-btn.active-per{background:rgba(76,175,130,.12);border-color:rgba(76,175,130,.3);color:var(--c4);}
+
+/* ESTEIRA */
+.esteira-wrap{display:flex;flex-direction:column;gap:6px;}
+.etapa-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:var(--dark4);border:1px solid rgba(255,255,255,.04);transition:all .2s;}
+.etapa-row.done{background:rgba(76,175,130,.06);border-color:rgba(76,175,130,.18);}
+.etapa-check{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.15);background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:11px;}
+.etapa-check.checked{border-color:var(--c4);background:var(--c4);color:#0A0A0A;}
+.etapa-label{flex:1;font-size:12px;color:var(--text);font-weight:500;}
+.etapa-row.done .etapa-label{color:var(--c4);}
+.etapa-data{font-size:10px;color:var(--muted);}
+
+/* TREINAMENTOS AVULSOS */
+.trein-add{display:flex;gap:6px;margin-bottom:8px;align-items:flex-end;}
+.trein-add input{flex:1;background:var(--dark4);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;}
+.trein-add input:focus{border-color:rgba(201,168,76,.35);}
+.trein-add input[type=date]{width:130px;flex:none;}
+.trein-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 11px;background:var(--dark4);border:1px solid rgba(255,255,255,.04);border-radius:8px;margin-bottom:5px;}
+.trein-nome{font-size:12px;color:var(--text);flex:1;}
+.trein-data{font-size:10px;color:var(--muted);flex-shrink:0;}
+
+/* MATERIAL */
+.material-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.mat-info{flex:1;}
+.mat-titulo{font-size:12px;font-weight:600;color:var(--cream);margin-bottom:2px;}
+.mat-meta{font-size:10px;color:var(--muted);}
+.mat-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(74,144,217,.1);border:1px solid rgba(74,144,217,.2);color:var(--c1);flex-shrink:0;}
+.mat-badge.novo{background:rgba(76,175,130,.1);border-color:rgba(76,175,130,.25);color:var(--c4);}
+.mat-acoes{display:flex;gap:5px;flex-shrink:0;}
+
+/* PRESENÇA */
+.presenca-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 13px;margin-bottom:7px;}
+.pres-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.pres-name{font-size:12px;font-weight:600;color:var(--cream);}
+.pres-hora{font-size:10px;color:var(--muted);}
+.pres-coords{font-size:10px;color:var(--muted);font-family:monospace;}
+
+/* MODAL EDITAR */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);z-index:1000;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--dark2);border:1px solid rgba(201,168,76,.18);border-radius:18px 18px 0 0;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;padding:18px 16px 30px;}
+.modal-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.btn-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);}
+
+/* BOTÕES */
+.btn-primary{width:100%;padding:11px;border-radius:10px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0A0A0A;border:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.5;pointer-events:none;}
+.btn-secondary{width:100%;padding:9px;border-radius:9px;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--muted);margin-top:7px;}
+.btn-secondary:hover{color:var(--c5);}
+.btn-icon{background:none;border:none;cursor:pointer;color:var(--muted);font-size:11px;padding:3px 6px;border-radius:5px;transition:all .2s;}
+.btn-icon:hover{color:var(--c5);}
+.btn-icon.edit:hover{color:var(--c1);}
+.btn-small{padding:5px 14px;border-radius:8px;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0A0A0A;border:none;white-space:nowrap;}
+
+.search-wrap{position:relative;margin-bottom:10px;}
+.search-wrap input{background:var(--dark3);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:9px 11px 9px 34px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;width:100%;transition:border-color .2s;}
+.search-wrap input:focus{border-color:rgba(201,168,76,.3);}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--muted);}
+.divider{border:none;border-top:1px solid rgba(255,255,255,.06);margin:11px 0;}
+.status-box{border-radius:9px;padding:10px 13px;font-size:11px;line-height:1.5;margin-top:9px;display:none;text-align:center;}
+.status-box.ok{background:rgba(76,175,130,.07);border:1px solid rgba(76,175,130,.2);color:var(--c4);}
+.status-box.err{background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2);color:var(--c5);}
+.toast{position:fixed;bottom:14px;right:14px;background:var(--dark2);border:1px solid rgba(76,175,130,.4);color:var(--c4);padding:8px 13px;border-radius:9px;font-size:11px;font-weight:700;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:9999;}
+.toast.show{transform:translateY(0);opacity:1;}
+.inner-tabs{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap;}
+.inner-tab{padding:4px 11px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:transparent;font-size:10px;font-weight:700;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .2s;}
+.inner-tab.active{background:rgba(201,168,76,.1);border-color:rgba(201,168,76,.3);color:var(--gold);}
+.painel-sel{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.2);border-radius:11px;padding:13px;margin-bottom:10px;}
+.painel-sel-name{font-family:'Cinzel',serif;font-size:14px;font-weight:900;color:var(--gold);margin-bottom:2px;}
+.painel-sel-apelido{font-size:11px;color:rgba(201,168,76,.6);font-style:italic;margin-bottom:3px;}
+.painel-sel-info{font-size:11px;color:var(--muted);}
+.esteira-progress{height:6px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-bottom:6px;}
+.esteira-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .5s;}
+.esteira-pct{font-size:10px;color:var(--gold);font-weight:700;margin-bottom:8px;}
+.empty{text-align:center;padding:26px 16px;color:var(--muted);font-size:12px;opacity:.6;}
+.footer{text-align:center;margin-top:20px;font-size:10px;color:rgba(255,255,255,.1);}
+@media(max-width:380px){.form-grid{grid-template-columns:1fr;}.field.full{grid-column:1;}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img class="logo" id="logoImg" alt="Águias">
+  <h1>Assistente Beatriz</h1>
+  <div class="header-sub">Gestão Interna — Equipe Águias</div>
+  <div class="header-user">Olá, Beatriz! 🦅</div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('corretores',this)">👥 Corretores</button>
+  <button class="tab-btn" onclick="showTab('esteira',this)">📋 Esteira</button>
+  <button class="tab-btn" onclick="showTab('gannicus',this)">🎓 Gannicus</button>
+  <button class="tab-btn" onclick="showTab('presenca',this)">📍 Presença</button>
+</div>
+
+<div class="page">
+
+<!-- ═══ CORRETORES ═══ -->
+<div class="section active" id="section-corretores">
+  <div class="card" id="cardNovoCorretor">
+    <div class="card-title">
+      <span>➕ Novo Corretor</span>
+      <button class="btn-icon edit" id="btnToggleCadastro" onclick="toggleCadastro()" style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.15);color:var(--gold);">▼ Fechar</button>
+    </div>
+    <div id="formCadastro">
+      <div class="form-grid">
+        <div class="field"><label>Nome completo</label><input type="text" id="c-nome" placeholder="Ex: João Silva"></div>
+        <div class="field"><label>Apelido</label><input type="text" id="c-apelido" placeholder="Ex: Guardalupe"></div>
+        <div class="field"><label>Telefone</label><input type="tel" id="c-tel" placeholder="(11) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="field"><label>CPF</label><input type="text" id="c-cpf" placeholder="000.000.000-00" oninput="maskCPF(this)"></div>
+        <div class="field"><label>E-mail</label><input type="email" id="c-email" placeholder="joao@email.com"></div>
+        <div class="field"><label>Data de entrada</label><input type="date" id="c-entrada"></div>
+        <div class="field"><label>Status</label>
+          <select id="c-status">
+            <option value="treinamento">Em treinamento</option>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+          </select>
+        </div>
+        <div class="field"><label>Obs.</label><input type="text" id="c-obs" placeholder="Anotações internas..."></div>
+      </div>
+      <div class="creci-box">
+        <div class="creci-label">📄 Situação CRECI</div>
+        <div class="creci-stages">
+          <button class="creci-stage-btn active-sem" id="creci-sem" onclick="setCRECI('sem')">✕ Sem CRECI</button>
+          <button class="creci-stage-btn" id="creci-est" onclick="setCRECI('estagiario')">📋 Estagiário</button>
+          <button class="creci-stage-btn" id="creci-per" onclick="setCRECI('permanente')">✅ Permanente</button>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+      <button class="btn-primary" onclick="salvarCorretor()">💾 Cadastrar corretor</button>
+      <div class="status-box" id="statusCadastro"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">👥 Equipe Cadastrada <span style="font-family:'DM Sans';font-size:10px;color:var(--muted);font-weight:400;" id="totalCorretores"></span></div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchCorretor" placeholder="Buscar por nome ou apelido..." oninput="renderListaCorretores()">
+    </div>
+    <div class="inner-tabs">
+      <button class="inner-tab active" onclick="filtrarStatus('todos',this)">Todos</button>
+      <button class="inner-tab" onclick="filtrarStatus('ativo',this)">Ativos</button>
+      <button class="inner-tab" onclick="filtrarStatus('treinamento',this)">Treinamento</button>
+      <button class="inner-tab" onclick="filtrarStatus('pendente',this)">⏳ Pendentes</button>
+      <button class="inner-tab" onclick="filtrarStatus('inativo',this)">Inativos</button>
+    </div>
+    <div id="listaCorretores"><div class="empty">Nenhum corretor cadastrado ainda.</div></div>
+  </div>
+</div>
+
+<!-- ═══ ESTEIRA ═══ -->
+<div class="section" id="section-esteira">
+  <div class="card">
+    <div class="card-title">👤 Selecionar Corretor</div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchEsteira" placeholder="Buscar por nome ou apelido..." oninput="renderSelectEsteira()">
+    </div>
+    <div id="selectEsteira"><div class="empty">Nenhum corretor cadastrado.</div></div>
+  </div>
+
+  <div id="painelEsteira" style="display:none">
+    <div class="painel-sel">
+      <div class="painel-sel-name" id="esteiraNome">—</div>
+      <div class="painel-sel-apelido" id="esteiraApelido"></div>
+      <div class="painel-sel-info" id="esteiraInfo">—</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Jornada de Formação</div>
+      <div class="esteira-pct" id="esteiraPct">0% concluído</div>
+      <div class="esteira-progress"><div class="esteira-fill" id="esteiraFill" style="width:0%"></div></div>
+      <div class="esteira-wrap" id="esteiraEtapas"></div>
+      <div class="creci-box">
+        <div class="creci-label">📄 Situação CRECI</div>
+        <div class="creci-stages">
+          <button class="creci-stage-btn" id="est-creci-sem" onclick="setEsteiraCRECI('sem')">✕ Sem CRECI</button>
+          <button class="creci-stage-btn" id="est-creci-est" onclick="setEsteiraCRECI('estagiario')">📋 Estagiário</button>
+          <button class="creci-stage-btn" id="est-creci-per" onclick="setEsteiraCRECI('permanente')">✅ Permanente</button>
+        </div>
+      </div>
+
+      <!-- TREINAMENTOS AVULSOS -->
+      <div class="divider"></div>
+      <div style="font-family:'Cinzel',serif;font-size:11px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:10px;">➕ Registrar Treinamento</div>
+      <div class="trein-add">
+        <input type="text" id="trein-nome-input" placeholder="Nome do treinamento...">
+        <input type="date" id="trein-data-input">
+        <button class="btn-small" onclick="adicionarTreinamento()">+ Add</button>
+      </div>
+      <div id="listaTreinamentos"></div>
+
+      <div style="height:10px"></div>
+      <button class="btn-primary" onclick="salvarEsteira()">💾 Salvar progresso</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GANNICUS ═══ -->
+<div class="section" id="section-gannicus">
+  <div class="card">
+    <div class="card-title"><span>📤 Publicar Material</span></div>
+    <div class="form-grid">
+      <div class="field full"><label>Título do treinamento</label><input type="text" id="mat-titulo" placeholder="Ex: Venda Persuasiva — Módulo 1"></div>
+      <div class="field"><label>Categoria</label>
+        <select id="mat-categoria">
+          <option value="treinamento">Treinamento</option>
+          <option value="script">Script</option>
+          <option value="gravacao">Gravação</option>
+          <option value="material-cury">Material Cury</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+      <div class="field"><label>Disponível para</label>
+        <select id="mat-para">
+          <option value="todos">Toda a equipe</option>
+          <option value="ativos">Só ativos</option>
+          <option value="treinamento">Em treinamento</option>
+        </select>
+      </div>
+      <div class="field full"><label>Link (Google Drive)</label><input type="url" id="mat-link" placeholder="https://drive.google.com/..." class="gold"></div>
+      <div class="field full"><label>Descrição breve</label><textarea id="mat-desc" placeholder="Do que se trata este material..."></textarea></div>
+    </div>
+    <button class="btn-primary" onclick="publicarMaterial()">📢 Publicar e alertar corretores</button>
+    <div class="status-box" id="statusMaterial"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📚 Biblioteca Gannicus <span style="font-family:'DM Sans';font-size:10px;color:var(--muted);font-weight:400;" id="totalMateriais"></span></div>
+    <div class="inner-tabs" id="filtrosCat">
+      <button class="inner-tab active" onclick="filtrarCategoria('todos',this)">Todos</button>
+      <button class="inner-tab" onclick="filtrarCategoria('treinamento',this)">Treinamentos</button>
+      <button class="inner-tab" onclick="filtrarCategoria('script',this)">Scripts</button>
+      <button class="inner-tab" onclick="filtrarCategoria('gravacao',this)">Gravações</button>
+      <button class="inner-tab" onclick="filtrarCategoria('material-cury',this)">Cury</button>
+    </div>
+    <div id="listaMateriais"><div class="empty">Nenhum material publicado ainda.</div></div>
+  </div>
+</div>
+
+<!-- ═══ PRESENÇA ═══ -->
+<div class="section" id="section-presenca">
+  <div class="card">
+    <div class="card-title">📅 Filtro</div>
+    <div class="form-grid">
+      <div class="field"><label>Data</label><input type="date" id="fil-data" onchange="renderPresenca()"></div>
+      <div class="field"><label>Corretor</label>
+        <select id="fil-corretor" onchange="renderPresenca()"><option value="todos">Todos</option></select>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📍 Check-ins <span style="font-family:'DM Sans';font-size:10px;color:var(--muted);font-weight:400;" id="totalCheckins"></span></div>
+    <div id="listaPresenca"><div class="empty">Nenhum check-in registrado.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🗺️ Locais mais frequentes</div>
+    <div id="listaLocais"><div class="empty">Acumule check-ins para ver a análise.</div></div>
+  </div>
+</div>
+
+<div class="footer">🦅 Equipe Águias — Assistente Beatriz</div>
+</div>
+
+<!-- MODAL EDITAR CORRETOR -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title">
+      <span>✏️ Editar Corretor</span>
+      <button class="btn-close" onclick="fecharModal()">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>Nome completo</label><input type="text" id="e-nome" placeholder="Nome"></div>
+      <div class="field"><label>Apelido</label><input type="text" id="e-apelido" placeholder="Apelido"></div>
+      <div class="field"><label>Telefone</label><input type="tel" id="e-tel" oninput="maskTel(this)"></div>
+      <div class="field"><label>CPF</label><input type="text" id="e-cpf" oninput="maskCPF(this)"></div>
+      <div class="field"><label>E-mail</label><input type="email" id="e-email"></div>
+      <div class="field"><label>Data de entrada</label><input type="date" id="e-entrada"></div>
+      <div class="field"><label>Status</label>
+        <select id="e-status">
+          <option value="treinamento">Em treinamento</option>
+          <option value="ativo">Ativo</option>
+          <option value="pendente">Pendente</option>
+          <option value="inativo">Inativo</option>
+        </select>
+      </div>
+      <div class="field"><label>Obs.</label><input type="text" id="e-obs"></div>
+    </div>
+    <div class="creci-box">
+      <div class="creci-label">📄 Situação CRECI</div>
+      <div class="creci-stages">
+        <button class="creci-stage-btn" id="e-creci-sem" onclick="setEditCRECI('sem')">✕ Sem CRECI</button>
+        <button class="creci-stage-btn" id="e-creci-est" onclick="setEditCRECI('estagiario')">📋 Estagiário</button>
+        <button class="creci-stage-btn" id="e-creci-per" onclick="setEditCRECI('permanente')">✅ Permanente</button>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <button class="btn-primary" onclick="confirmarEdicao()">💾 Salvar alterações</button>
+    <button class="btn-secondary" onclick="fecharModal()">Cancelar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.getElementById('logoImg').src='https://lopesap.github.io/equipe-aguias/logo.jpg';
+
+const SHEETS_URL='https://script.google.com/macros/s/AKfycby1jYbTYtkAv4eIRVYmwIev6bIH9zYXAMVUAUjh5RQAsLJ6_M79rVLpGEkQDN301NpBfQ/exec';
+
+const ETAPAS_ESTEIRA=[
+  {key:'contratacao',  label:'Contratação'},
+  {key:'onboard',      label:'Treinamento Onboard'},
+  {key:'salesforce',   label:'Treinamento Salesforce'},
+  {key:'kobe',         label:'Treinamento Kobe'},
+  {key:'fechamento',   label:'Treinamento Fechamento de Mesa'},
+  {key:'credito',      label:'Treinamento Crédito Imobiliário'},
+  {key:'integracao',   label:'Integração'},
+  {key:'estagio',      label:'Estágio'},
+];
+
+const CAT_LABELS={treinamento:'Treinamento',script:'Script',gravacao:'Gravação','material-cury':'Cury',outro:'Outro'};
+const CRECI_LABELS={sem:'Sem CRECI',estagiario:'Estagiário',permanente:'Permanente'};
+
+let corretores=JSON.parse(localStorage.getItem('aguias_corretores_v2')||'[]');
+let materiais=JSON.parse(localStorage.getItem('aguias_materiais')||'[]');
+let checkins=JSON.parse(localStorage.getItem('aguias_checkins')||'[]');
+let filStatus='todos';
+let filCat='todos';
+let corrSelecionado=null;
+let creciNovo='sem';
+let editandoId=null;
+let editCRECI='sem';
+
+// ── TABS ──
+function showTab(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='esteira')renderSelectEsteira();
+  if(name==='presenca'){renderPresenca();renderLocais();}
+}
+
+// ── MASKS ──
+function maskTel(input){
+  let v=input.value.replace(/\D/g,'').slice(0,11);
+  if(v.length<=10)input.value=v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+  else input.value=v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');
+}
+function maskCPF(input){
+  let v=input.value.replace(/\D/g,'').slice(0,11);
+  input.value=v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/,'$1.$2.$3-$4');
+}
+
+// ── CADASTRO ──
+let cadastroAberto=true;
+function toggleCadastro(){
+  cadastroAberto=!cadastroAberto;
+  document.getElementById('formCadastro').style.display=cadastroAberto?'block':'none';
+  document.getElementById('btnToggleCadastro').textContent=cadastroAberto?'▼ Fechar':'▶ Novo';
+}
+
+function setCRECI(val){
+  creciNovo=val;
+  ['sem','est','per'].forEach(s=>document.getElementById('creci-'+s).className='creci-stage-btn');
+  if(val==='sem')document.getElementById('creci-sem').classList.add('active-sem');
+  if(val==='estagiario')document.getElementById('creci-est').classList.add('active-est');
+  if(val==='permanente')document.getElementById('creci-per').classList.add('active-per');
+}
+setCRECI('sem');
+
+function setEditCRECI(val){
+  editCRECI=val;
+  ['sem','est','per'].forEach(s=>document.getElementById('e-creci-'+s).className='creci-stage-btn');
+  if(val==='sem')document.getElementById('e-creci-sem').classList.add('active-sem');
+  if(val==='estagiario')document.getElementById('e-creci-est').classList.add('active-est');
+  if(val==='permanente')document.getElementById('e-creci-per').classList.add('active-per');
+}
+
+function salvarCorretor(){
+  const nome=document.getElementById('c-nome').value.trim();
+  if(!nome){showStatusBox('statusCadastro','err','Digite o nome do corretor.');return;}
+  // Verificar duplicado
+  const dup=corretores.find(c=>c.nome.toLowerCase()===nome.toLowerCase());
+  if(dup){
+    showStatusBox('statusCadastro','err','⚠️ Já existe um corretor com este nome. Use o botão ✏️ para editar.');
+    return;
+  }
+  const corretor={
+    id:Date.now(),nome,
+    apelido:document.getElementById('c-apelido').value.trim(),
+    tel:document.getElementById('c-tel').value.trim(),
+    cpf:document.getElementById('c-cpf').value.trim(),
+    email:document.getElementById('c-email').value.trim(),
+    entrada:document.getElementById('c-entrada').value,
+    status:document.getElementById('c-status').value,
+    obs:document.getElementById('c-obs').value.trim(),
+    creci:creciNovo,
+    esteira:{},treinamentos:[],
+    createdAt:new Date().toLocaleDateString('pt-BR'),
+  };
+  corretores.unshift(corretor);
+  salvarCorretores();
+  enviarCadastroSheets(corretor);
+  ['c-nome','c-apelido','c-tel','c-cpf','c-email','c-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('c-entrada').value='';
+  document.getElementById('c-status').value='treinamento';
+  setCRECI('sem');
+  showStatusBox('statusCadastro','ok','✅ Corretor cadastrado!');
+  renderListaCorretores();
+  atualizarFiltroCorretores();
+  showToast('✅ '+nome+' cadastrado!');
+}
+
+async function enviarCadastroSheets(c){
+  try{
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'salvarCadastro',...c,creci:CRECI_LABELS[c.creci]||c.creci})});
+  }catch(e){}
+}
+
+function salvarCorretores(){
+  localStorage.setItem('aguias_corretores_v2',JSON.stringify(corretores));
+}
+
+// ── EDITAR ──
+function abrirEditar(id){
+  const c=corretores.find(x=>x.id===id);
+  if(!c)return;
+  editandoId=id;
+  document.getElementById('e-nome').value=c.nome||'';
+  document.getElementById('e-apelido').value=c.apelido||'';
+  document.getElementById('e-tel').value=c.tel||'';
+  document.getElementById('e-cpf').value=c.cpf||'';
+  document.getElementById('e-email').value=c.email||'';
+  document.getElementById('e-entrada').value=c.entrada||'';
+  document.getElementById('e-status').value=c.status||'treinamento';
+  document.getElementById('e-obs').value=c.obs||'';
+  setEditCRECI(c.creci||'sem');
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function confirmarEdicao(){
+  if(!editandoId)return;
+  const idx=corretores.findIndex(c=>c.id===editandoId);
+  if(idx<0)return;
+  const c=corretores[idx];
+  c.nome=document.getElementById('e-nome').value.trim()||c.nome;
+  c.apelido=document.getElementById('e-apelido').value.trim();
+  c.tel=document.getElementById('e-tel').value.trim();
+  c.cpf=document.getElementById('e-cpf').value.trim();
+  c.email=document.getElementById('e-email').value.trim();
+  c.entrada=document.getElementById('e-entrada').value;
+  c.status=document.getElementById('e-status').value;
+  c.obs=document.getElementById('e-obs').value.trim();
+  c.creci=editCRECI;
+  salvarCorretores();
+  enviarCadastroSheets(c);
+  fecharModal();
+  renderListaCorretores();
+  showToast('✅ Cadastro atualizado!');
+}
+
+function fecharModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  editandoId=null;
+}
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))fecharModal();});
+
+// ── LISTA CORRETORES ──
+function filtrarStatus(s,btn){
+  filStatus=s;
+  document.querySelectorAll('#section-corretores .inner-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderListaCorretores();
+}
+
+function calcPctEsteira(c){
+  const concl=ETAPAS_ESTEIRA.filter(e=>(c.esteira||{})[e.key]).length;
+  return Math.round((concl/ETAPAS_ESTEIRA.length)*100);
+}
+
+function creciLabel(val){
+  if(val==='permanente')return'<span style="color:var(--c4)">✅ Permanente</span>';
+  if(val==='estagiario')return'<span style="color:var(--c3)">📋 Estagiário</span>';
+  return'<span style="color:var(--c5)">✕ Sem CRECI</span>';
+}
+
+function renderListaCorretores(){
+  const busca=(document.getElementById('searchCorretor').value||'').toLowerCase();
+  let lista=corretores.filter(c=>{
+    const matchStatus=filStatus==='todos'||c.status===filStatus;
+    const matchBusca=!busca||
+      c.nome.toLowerCase().includes(busca)||
+      (c.apelido||'').toLowerCase().includes(busca);
+    return matchStatus&&matchBusca;
+  });
+  document.getElementById('totalCorretores').textContent=corretores.length?' ('+corretores.length+')':'';
+  const div=document.getElementById('listaCorretores');
+  if(!lista.length){div.innerHTML='<div class="empty">Nenhum corretor encontrado.</div>';return;}
+  div.innerHTML=lista.map(c=>{
+    const pct=calcPctEsteira(c);
+    const statusMap={ativo:'badge-ativo',inativo:'badge-inativo',treinamento:'badge-treinamento',pendente:'badge-pendente'};
+    const statusLabel={ativo:'✓ Ativo',inativo:'✗ Inativo',treinamento:'⏳ Treinamento',pendente:'🔔 Pendente'};
+    return `<div class="corretor-item">
+      <div class="ci-header">
+        <div style="display:flex;align-items:baseline;gap:0;flex-wrap:wrap;">
+          <div class="ci-name">${c.nome}</div>
+          ${c.apelido?`<div class="ci-apelido">&nbsp;(${c.apelido})</div>`:''}
+        </div>
+        <div class="ci-acoes">
+          <button class="btn-icon edit" onclick="abrirEditar(${c.id})" title="Editar">✏️</button>
+          <span class="status-badge ${statusMap[c.status]||'badge-treinamento'}">${statusLabel[c.status]||c.status}</span>
+        </div>
+      </div>
+      <div class="ci-info">
+        ${c.tel?`<div class="ci-stat">📱 <b>${c.tel}</b></div>`:''}
+        ${c.entrada?`<div class="ci-stat">📅 <b>${formatarData(c.entrada)}</b></div>`:''}
+        <div class="ci-stat">📄 ${creciLabel(c.creci||'sem')}</div>
+      </div>
+      <div class="mini-progress-wrap">
+        <div class="mini-progress"><div class="mini-fill" style="width:${pct}%"></div></div>
+        <div class="mini-pct">Esteira: ${pct}% concluído</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatarData(d){
+  if(!d)return'—';
+  const p=d.split('-');
+  if(p.length===3)return p[2]+'/'+p[1]+'/'+p[0];
+  return d;
+}
+
+// ── ESTEIRA ──
+function renderSelectEsteira(){
+  const busca=(document.getElementById('searchEsteira').value||'').toLowerCase();
+  const lista=corretores.filter(c=>
+    !busca||c.nome.toLowerCase().includes(busca)||(c.apelido||'').toLowerCase().includes(busca)
+  );
+  const div=document.getElementById('selectEsteira');
+  if(!lista.length){div.innerHTML='<div class="empty">Nenhum corretor encontrado.</div>';return;}
+  div.innerHTML=lista.map(c=>{
+    const pct=calcPctEsteira(c);
+    return `<div class="corretor-item ${corrSelecionado===c.id?'selected':''}" onclick="selecionarCorretor(${c.id})">
+      <div class="ci-header">
+        <div style="display:flex;align-items:baseline;flex-wrap:wrap;">
+          <div class="ci-name">${c.nome}</div>
+          ${c.apelido?`<div class="ci-apelido">&nbsp;(${c.apelido})</div>`:''}
+        </div>
+        <div style="font-size:10px;color:var(--gold);font-weight:700">${pct}%</div>
+      </div>
+      <div class="mini-progress-wrap">
+        <div class="mini-progress"><div class="mini-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selecionarCorretor(id){
+  corrSelecionado=id;
+  const c=corretores.find(x=>x.id===id);
+  if(!c)return;
+  document.getElementById('esteiraNome').textContent=c.nome;
+  document.getElementById('esteiraApelido').textContent=c.apelido?'('+c.apelido+')':'';
+  document.getElementById('esteiraInfo').textContent=(c.entrada?'Entrada: '+formatarData(c.entrada)+' · ':'')+c.status;
+  document.getElementById('painelEsteira').style.display='block';
+  renderEtapas(c);
+  renderSelectEsteira();
+  // Pré-preencher data de hoje no campo de treinamento
+  document.getElementById('trein-data-input').value=new Date().toISOString().split('T')[0];
+}
+
+function renderEtapas(c){
+  const esteira=c.esteira||{};
+  const concl=ETAPAS_ESTEIRA.filter(e=>esteira[e.key]).length;
+  const pct=Math.round((concl/ETAPAS_ESTEIRA.length)*100);
+  document.getElementById('esteiraPct').textContent=pct+'% concluído ('+concl+'/'+ETAPAS_ESTEIRA.length+' etapas)';
+  document.getElementById('esteiraFill').style.width=pct+'%';
+  document.getElementById('esteiraEtapas').innerHTML=ETAPAS_ESTEIRA.map(e=>`
+    <div class="etapa-row ${esteira[e.key]?'done':''}">
+      <div class="etapa-check ${esteira[e.key]?'checked':''}" onclick="toggleEtapa('${e.key}')">${esteira[e.key]?'✓':''}</div>
+      <div class="etapa-label">${e.label}</div>
+      ${esteira[e.key]&&esteira[e.key+'_data']?`<div class="etapa-data">${esteira[e.key+'_data']}</div>`:''}
+    </div>`).join('');
+  // CRECI
+  const cr=c.creci||'sem';
+  ['sem','est','per'].forEach(s=>document.getElementById('est-creci-'+s).className='creci-stage-btn');
+  if(cr==='sem')document.getElementById('est-creci-sem').classList.add('active-sem');
+  if(cr==='estagiario')document.getElementById('est-creci-est').classList.add('active-est');
+  if(cr==='permanente')document.getElementById('est-creci-per').classList.add('active-per');
+  // Treinamentos avulsos
+  renderTreinamentos(c);
+}
+
+function renderTreinamentos(c){
+  const lista=c.treinamentos||[];
+  const div=document.getElementById('listaTreinamentos');
+  if(!lista.length){div.innerHTML='<div style="font-size:11px;color:var(--muted);padding:4px 0;opacity:.6">Nenhum treinamento registrado ainda.</div>';return;}
+  div.innerHTML=lista.map((t,i)=>`
+    <div class="trein-item">
+      <div class="trein-nome">🎓 ${t.nome}</div>
+      <div class="trein-data">${t.data||''}</div>
+      <button class="btn-icon" onclick="removerTreinamento(${i})" style="font-size:10px">✕</button>
+    </div>`).join('');
+}
+
+function adicionarTreinamento(){
+  if(corrSelecionado===null)return;
+  const nome=document.getElementById('trein-nome-input').value.trim();
+  if(!nome){showToast('Digite o nome do treinamento','warn');return;}
+  const data=document.getElementById('trein-data-input').value;
+  const dataFmt=data?formatarData(data):'';
+  const c=corretores.find(x=>x.id===corrSelecionado);
+  if(!c)return;
+  if(!c.treinamentos)c.treinamentos=[];
+  c.treinamentos.push({nome,data:dataFmt});
+  document.getElementById('trein-nome-input').value='';
+  renderTreinamentos(c);
+  showToast('✅ Treinamento adicionado!');
+}
+
+function removerTreinamento(idx){
+  if(corrSelecionado===null)return;
+  const c=corretores.find(x=>x.id===corrSelecionado);
+  if(!c)return;
+  c.treinamentos.splice(idx,1);
+  renderTreinamentos(c);
+}
+
+function toggleEtapa(key){
+  if(corrSelecionado===null)return;
+  const c=corretores.find(x=>x.id===corrSelecionado);
+  if(!c)return;
+  if(!c.esteira)c.esteira={};
+  c.esteira[key]=!c.esteira[key];
+  if(c.esteira[key])c.esteira[key+'_data']=new Date().toLocaleDateString('pt-BR');
+  else delete c.esteira[key+'_data'];
+  renderEtapas(c);
+}
+
+function setEsteiraCRECI(val){
+  if(corrSelecionado===null)return;
+  const c=corretores.find(x=>x.id===corrSelecionado);
+  if(!c)return;
+  c.creci=val;
+  ['sem','est','per'].forEach(s=>document.getElementById('est-creci-'+s).className='creci-stage-btn');
+  if(val==='sem')document.getElementById('est-creci-sem').classList.add('active-sem');
+  if(val==='estagiario')document.getElementById('est-creci-est').classList.add('active-est');
+  if(val==='permanente')document.getElementById('est-creci-per').classList.add('active-per');
+}
+
+function salvarEsteira(){
+  if(corrSelecionado===null)return;
+  salvarCorretores();
+  const c=corretores.find(x=>x.id===corrSelecionado);
+  if(c)enviarCadastroSheets(c);
+  renderListaCorretores();
+  showToast('✅ Esteira salva!');
+}
+
+// ── GANNICUS ──
+function filtrarCategoria(cat,btn){
+  filCat=cat;
+  document.querySelectorAll('#filtrosCat .inner-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMateriais();
+}
+
+function publicarMaterial(){
+  const titulo=document.getElementById('mat-titulo').value.trim();
+  const link=document.getElementById('mat-link').value.trim();
+  if(!titulo||!link){showStatusBox('statusMaterial','err','Preencha o título e o link.');return;}
+  const mat={
+    id:Date.now(),titulo,
+    categoria:document.getElementById('mat-categoria').value,
+    para:document.getElementById('mat-para').value,
+    link,
+    desc:document.getElementById('mat-desc').value.trim(),
+    data:new Date().toLocaleDateString('pt-BR'),novo:true,
+  };
+  materiais.unshift(mat);
+  localStorage.setItem('aguias_materiais',JSON.stringify(materiais));
+  try{
+    fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'salvarMaterial',...mat})});
+  }catch(e){}
+  ['mat-titulo','mat-link','mat-desc'].forEach(id=>document.getElementById(id).value='');
+  showStatusBox('statusMaterial','ok','✅ Material publicado! Corretores verão o alerta na próxima abertura do app.');
+  renderMateriais();
+  showToast('📢 Material publicado!');
+}
+
+function renderMateriais(){
+  let lista=materiais.filter(m=>filCat==='todos'||m.categoria===filCat);
+  document.getElementById('totalMateriais').textContent=materiais.length?' ('+materiais.length+')':'';
+  const div=document.getElementById('listaMateriais');
+  if(!lista.length){div.innerHTML='<div class="empty">Nenhum material nesta categoria.</div>';return;}
+  div.innerHTML=lista.map(m=>`
+    <div class="material-item">
+      <div class="mat-info">
+        <div class="mat-titulo">${m.titulo}</div>
+        <div class="mat-meta">${m.data} · ${m.para==='todos'?'Toda equipe':m.para==='ativos'?'Ativos':'Em treinamento'}</div>
+        ${m.desc?`<div class="mat-meta" style="color:var(--text);margin-top:2px">${m.desc}</div>`:''}
+      </div>
+      <span class="mat-badge ${m.novo?'novo':''}">${CAT_LABELS[m.categoria]||m.categoria}</span>
+      <div class="mat-acoes">
+        <a href="${m.link}" target="_blank" style="text-decoration:none"><button class="btn-icon edit">🔗</button></a>
+        <button class="btn-icon" onclick="delMaterial(${m.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function delMaterial(id){
+  if(!confirm('Remover este material?'))return;
+  materiais=materiais.filter(m=>m.id!==id);
+  localStorage.setItem('aguias_materiais',JSON.stringify(materiais));
+  renderMateriais();
+}
+
+// ── PRESENÇA ──
+function atualizarFiltroCorretores(){
+  const sel=document.getElementById('fil-corretor');
+  const nomes=[...new Set(checkins.map(c=>c.nome))].sort();
+  sel.innerHTML='<option value="todos">Todos</option>'+nomes.map(n=>`<option value="${n}">${n}</option>`).join('');
+}
+
+function renderPresenca(){
+  const dataFil=document.getElementById('fil-data').value;
+  const corrFil=document.getElementById('fil-corretor').value;
+  let lista=checkins;
+  if(dataFil)lista=lista.filter(c=>c.data===dataFil);
+  if(corrFil!=='todos')lista=lista.filter(c=>c.nome===corrFil);
+  document.getElementById('totalCheckins').textContent=lista.length?' ('+lista.length+')':'';
+  const div=document.getElementById('listaPresenca');
+  if(!lista.length){div.innerHTML='<div class="empty">Nenhum check-in para este filtro.</div>';return;}
+  div.innerHTML=lista.slice().reverse().map(c=>`
+    <div class="presenca-item">
+      <div class="pres-header">
+        <div class="pres-name">👤 ${c.nome}</div>
+        <div class="pres-hora">🕐 ${c.hora||'—'}</div>
+      </div>
+      <div style="font-size:11px;color:var(--text);margin-bottom:4px;">📅 ${c.data}</div>
+      <div class="pres-coords">📍 ${(c.lat||0).toFixed(5)}, ${(c.lng||0).toFixed(5)} · ±${Math.round(c.precisao||0)}m</div>
+      <div style="margin-top:6px;"><button class="btn-icon" onclick="delCheckin(${c.id})" style="font-size:10px">✕ Remover</button></div>
+    </div>`).join('');
+}
+
+function delCheckin(id){
+  if(!confirm('Remover este check-in?'))return;
+  checkins=checkins.filter(c=>c.id!==id);
+  localStorage.setItem('aguias_checkins',JSON.stringify(checkins));
+  renderPresenca();renderLocais();
+}
+
+function renderLocais(){
+  if(!checkins.length){document.getElementById('listaLocais').innerHTML='<div class="empty">Acumule check-ins para ver a análise.</div>';return;}
+  const RAIO=300;const clusters=[];
+  checkins.forEach(ci=>{
+    const lat=parseFloat(ci.lat);const lng=parseFloat(ci.lng);
+    if(!lat||!lng)return;
+    let found=false;
+    for(const cl of clusters){
+      if(calcDist(lat,lng,cl.lat,cl.lng)<=RAIO){cl.count++;cl.lat=(cl.lat*(cl.count-1)+lat)/cl.count;cl.lng=(cl.lng*(cl.count-1)+lng)/cl.count;found=true;break;}
+    }
+    if(!found)clusters.push({lat,lng,count:1});
+  });
+  clusters.sort((a,b)=>b.count-a.count);
+  document.getElementById('listaLocais').innerHTML=clusters.slice(0,5).map((cl,i)=>`
+    <div style="background:var(--dark3);border-radius:9px;padding:10px 13px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--cream);">${['🥇','🥈','🥉','4º','5º'][i]} Local ${i+1}</div>
+        <div style="font-size:10px;color:var(--muted);font-family:monospace;margin-top:2px;">${cl.lat.toFixed(4)}, ${cl.lng.toFixed(4)}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Cinzel',serif;font-size:18px;font-weight:900;color:var(--gold)">${cl.count}</div>
+        <div style="font-size:10px;color:var(--muted)">check-ins</div>
+      </div>
+    </div>`).join('');
+}
+
+function calcDist(lat1,lng1,lat2,lng2){
+  const R=6371000,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ── SINCRONIZAR COM SHEETS ──
+async function sincronizarPendentes(){
+  try{
+    const r=await fetch(SHEETS_URL+'?action=getCorretores');
+    const d=await r.json();
+    const lista=d.corretores||[];
+    let novos=0;
+    lista.forEach(c=>{
+      const existe=corretores.find(x=>x.nome.toLowerCase()===(c.nome||'').toLowerCase());
+      if(!existe&&c.nome){
+        corretores.unshift({
+          id:parseInt(c.id)||Date.now(),
+          nome:c.nome,apelido:'',tel:c.tel||'',cpf:'',email:'',
+          entrada:'',status:'pendente',
+          obs:'Autocadastro via App Corretor',
+          creci:'sem',esteira:{},treinamentos:[],
+          createdAt:c.criado||'',
+        });
+        novos++;
+      }
+    });
+    if(novos>0){salvarCorretores();renderListaCorretores();showToast('🔄 '+novos+' corretor(es) sincronizado(s)!');}
+  }catch(e){}
+}
+
+// ── UTILS ──
+function showStatusBox(id,tipo,msg){
+  const box=document.getElementById(id);
+  box.className='status-box '+tipo;box.style.display='block';box.textContent=msg;
+  setTimeout(()=>{box.style.display='none';},3500);
+}
+function showToast(msg,type){
+  const t=document.getElementById('toast');t.textContent=msg;
+  t.style.borderColor=type==='warn'?'rgba(232,148,58,.5)':'rgba(76,175,130,.4)';
+  t.style.color=type==='warn'?'#E8943A':'#4CAF82';
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── INIT ──
+document.getElementById('fil-data').value=new Date().toISOString().split('T')[0];
+atualizarFiltroCorretores();
+renderListaCorretores();
+renderMateriais();
+renderPresenca();
+renderLocais();
+sincronizarPendentes();
+</script>
+</body>
+</html>
