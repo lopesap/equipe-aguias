@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema Águias — Admin</title>
+<title>APP-ADMIN-JULIO — Equipe Águias</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -23,7 +23,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 /* TABS */
 .tabs{position:sticky;top:0;z-index:100;display:flex;background:rgba(10,10,10,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.05);}
-.tab-btn{flex:1;padding:11px 6px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.tab-btn{flex:1;padding:10px 4px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
 .tab-btn:hover:not(.active){color:var(--text);}
 
@@ -34,7 +34,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .modal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.06);}
 .modal-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;}
 .btn-close{background:none;border:none;cursor:pointer;font-size:17px;color:var(--muted);padding:2px 6px;}
-.btn-close:hover{color:var(--text);}
 .modal-body{padding:16px 18px;}
 .modal-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
 .mfield{display:flex;flex-direction:column;gap:3px;}
@@ -43,14 +42,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .mfield input,.mfield select{background:var(--dark3);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:9px 11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;outline:none;transition:border-color .2s;width:100%;}
 .mfield input:focus,.mfield select:focus{border-color:rgba(201,168,76,.4);}
 .mfield select option{background:var(--dark3);}
-.mfield input.gold{border-color:rgba(201,168,76,.22);}
 .mfield.full{grid-column:1/-1;}
 .modal-btns{display:flex;gap:8px;margin-top:4px;}
-.btn-save{flex:1;padding:10px;border-radius:9px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0A0A0A;border:none;transition:all .2s;}
-.btn-save:hover{filter:brightness(1.08);}
+.btn-save{flex:1;padding:10px;border-radius:9px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0A0A0A;border:none;}
 .btn-clr{padding:10px 14px;border-radius:9px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)!important;color:var(--muted);}
 
-/* FILTRO MÊS */
+/* TOOLBAR */
 .toolbar{position:relative;z-index:1;display:flex;align-items:center;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.04);overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .toolbar label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
 .mes-tabs{display:flex;gap:4px;}
@@ -62,8 +59,19 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .page{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:16px 14px 60px;}
 .section{display:none;}.section.active{display:block;}
 
-/* METRICS */
-.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+/* CARD */
+.card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:14px;}
+.card-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+
+/* STAND — quem está agora */
+.stand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;}
+.stand-item{background:var(--dark3);border:1px solid rgba(76,175,130,.2);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;}
+.stand-dot{width:8px;height:8px;border-radius:50%;background:var(--c4);flex-shrink:0;box-shadow:0 0 6px rgba(76,175,130,.5);}
+.stand-name{font-size:12px;font-weight:600;color:var(--cream);}
+.stand-hora{font-size:10px;color:var(--muted);}
+
+/* MÉTRICAS */
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
 .mc{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:13px 15px;border-top:3px solid var(--mcol,#333);}
 .mc-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
 .mc-val{font-family:'Cinzel',serif;font-size:clamp(18px,2.5vw,26px);font-weight:900;color:var(--cream);line-height:1;}
@@ -74,28 +82,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .mc-full{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 
 /* GRÁFICO */
-.chart-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:16px;}
-.chart-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:14px;}
+.chart-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:14px;}
+.chart-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:12px;}
 .chart-legend{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap;}
 .leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);}
 .leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 
 /* RANKING */
-.rank-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:16px;}
-.rank-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:12px;}
 .rank-row{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;margin-bottom:5px;background:var(--dark3);}
 .rank-pos{font-family:'Cinzel',serif;font-size:15px;font-weight:900;width:26px;text-align:center;flex-shrink:0;}
 .rank-info{flex:1;}
-.rank-metric{font-size:10px;color:var(--muted);margin-bottom:1px;}
 .rank-name{font-size:12px;font-weight:600;color:var(--cream);}
-.rank-pct{font-size:10px;font-weight:700;flex-shrink:0;}
-.rank-bar-w{width:70px;flex-shrink:0;}
-.rank-bar{height:5px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;}
-.rank-bar-f{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .6s;}
+.rank-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+.rank-val{font-family:'Cinzel',serif;font-size:15px;font-weight:900;color:var(--gold);flex-shrink:0;}
 
-/* CORRETORES */
-.corr-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:16px;}
-.corr-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:12px;}
+/* CORRETORES DETALHADO */
 .corr-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
 .corr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
 .corr-name{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--cream);}
@@ -104,23 +105,48 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .corr-stat{background:var(--dark4);border-radius:7px;padding:7px 9px;text-align:center;}
 .corr-stat-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;}
 .corr-stat-val{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--cream);}
-.corr-comissao{display:flex;align-items:center;justify-content:space-between;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);border-radius:7px;padding:7px 11px;}
-.corr-com-label{font-size:11px;color:var(--text);}
-.corr-com-val{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:var(--gold);}
-.btn-del-corr{background:none;border:none;cursor:pointer;color:var(--muted);font-size:11px;padding:3px 7px;border-radius:5px;transition:all .2s;}
-.btn-del-corr:hover{color:var(--c5);background:rgba(192,57,43,.08);}
+.corr-bottom{display:flex;gap:7px;flex-wrap:wrap;}
+.corr-info-box{flex:1;min-width:120px;background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.12);border-radius:7px;padding:7px 11px;display:flex;align-items:center;justify-content:space-between;}
+.corr-info-label{font-size:11px;color:var(--text);}
+.corr-info-val{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--gold);}
 
-/* HISTÓRICO */
-.hist-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;}
-.hist-title{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:12px;}
+/* ESTEIRA MINI */
+.esteira-mini{height:5px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-top:6px;}
+.esteira-mini-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));transition:width .5s;}
+
+/* METAS DOS CORRETORES */
+.meta-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 13px;margin-bottom:7px;}
+.meta-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:4px;}
+.meta-item-name{font-size:12px;font-weight:600;color:var(--cream);}
+.meta-item-val{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--gold);}
+.meta-bar{height:6px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-bottom:4px;}
+.meta-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light));transition:width .5s;}
+.meta-pct{font-size:10px;color:var(--muted);}
+
+/* FREQUÊNCIA */
+.freq-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 13px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.freq-name{font-size:12px;font-weight:600;color:var(--cream);}
+.freq-vals{display:flex;gap:12px;flex-wrap:wrap;}
+.freq-stat{text-align:center;}
+.freq-stat-val{font-family:'Cinzel',serif;font-size:16px;font-weight:900;}
+.freq-stat-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;}
+
+/* CLUSTERS */
+.cluster-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 13px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.cluster-pos{font-family:'Cinzel',serif;font-size:18px;font-weight:900;color:var(--gold);width:30px;text-align:center;flex-shrink:0;}
+.cluster-info{flex:1;}
+.cluster-coords{font-size:10px;color:var(--muted);font-family:monospace;margin-top:2px;}
+.cluster-count{font-family:'Cinzel',serif;font-size:20px;font-weight:900;color:var(--gold);text-align:right;}
+.cluster-label{font-size:10px;color:var(--muted);}
+
+/* HISTÓRICO TABELA */
+.hist-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:14px;}
 .hist-tbl{width:100%;border-collapse:collapse;}
 .hist-tbl th{padding:7px 10px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid rgba(255,255,255,.06);}
 .hist-tbl td{padding:9px 10px;font-size:12px;color:var(--text);border-bottom:1px solid rgba(255,255,255,.03);}
 .hist-tbl tr:last-child td{border-bottom:none;}
 .hist-tbl tr:hover td{background:rgba(255,255,255,.02);}
 .hist-mes-lbl{font-family:'Cinzel',serif;font-weight:700;color:var(--gold);font-size:11px;}
-.btn-del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:11px;padding:3px 6px;border-radius:5px;}
-.btn-del:hover{color:var(--c5);}
 
 /* CALCULADORA */
 .calc-card{background:var(--dark2);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:18px;margin-bottom:14px;}
@@ -137,20 +163,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .dias-badge{display:inline-block;font-size:10px;color:var(--gold);background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.14);border-radius:20px;padding:3px 10px;margin-bottom:8px;}
 .res-row{display:grid;grid-template-columns:1fr 65px 80px 85px;gap:5px;align-items:center;padding:9px 11px;border-radius:10px;margin-bottom:3px;background:var(--dark3);border-left:3px solid var(--lc,rgba(255,255,255,.06));}
 .res-row.gold-row{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-left:3px solid var(--gold)!important;}
-.res-label{font-size:12px;color:var(--text);font-weight:500;}
+.res-label{font-size:12px;color:var(--text);}
 .res-mes{font-family:'Cinzel',serif;font-size:16px;font-weight:900;color:var(--cream);text-align:center;}
 .res-sem{font-size:11px;font-weight:700;color:var(--c2);text-align:center;background:rgba(155,142,196,.08);border-radius:6px;padding:3px 5px;}
 .res-dia{font-size:11px;font-weight:700;color:var(--muted);text-align:center;background:rgba(255,255,255,.04);border-radius:6px;padding:3px 5px;}
 .res-mes.g,.res-sem.g,.res-dia.g{color:var(--gold);}
 .taxa{font-size:10px;color:var(--muted);padding:2px 12px 3px;opacity:.6;}
 .res-bottom{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.18);border-radius:12px;padding:13px 15px;margin-top:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-.res-bottom-label{font-size:12px;color:var(--text);}
-.res-bottom-sub{font-size:10px;color:var(--muted);margin-top:2px;}
 .res-bottom-val{font-family:'Cinzel',serif;font-size:22px;font-weight:900;color:var(--gold);}
 .aviso{background:rgba(232,148,58,.08);border:1px solid rgba(232,148,58,.2);border-radius:9px;padding:10px 12px;font-size:12px;color:var(--c3);line-height:1.6;margin-top:10px;}
+.save-corretor{margin-top:10px;}
+.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+.btn-g{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0A0A0A;border:none;}
+.btn-o{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:9px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)!important;color:var(--muted);}
 
-/* HIST CALCULADORA */
-.calc-hist-card{background:var(--dark2);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:14px;}
+/* CALC HIST */
 .calc-hist-item{background:var(--dark3);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:12px 14px;margin-bottom:8px;position:relative;}
 .calc-hist-name{font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--cream);margin-bottom:3px;}
 .calc-hist-meta{font-size:11px;color:var(--muted);margin-bottom:8px;}
@@ -165,16 +192,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .btn-del-ch{position:absolute;top:10px;right:10px;background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px;padding:3px;}
 .btn-del-ch:hover{color:var(--c5);}
 
-/* SALVAR CORRETOR */
-.save-corretor{margin-top:10px;}
-.save-corretor .calc-field{margin-bottom:0;}
-.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
-.btn-g{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#0A0A0A;border:none;transition:all .2s;}
-.btn-g:hover{filter:brightness(1.08);transform:translateY(-1px);}
-.btn-o{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:9px;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)!important;color:var(--muted);}
-.btn-o:hover{color:var(--c5);}
+/* METAS EQUIPE EDITÁVEIS */
+.metas-equipe-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;}
+.me-field{display:flex;flex-direction:column;gap:3px;}
+.me-field label{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);}
+.me-field input{background:var(--dark4);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:7px 10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;outline:none;width:100%;}
+.me-field input:focus{border-color:rgba(201,168,76,.35);}
 
-.empty{text-align:center;padding:36px 20px;color:var(--muted);font-size:13px;opacity:.6;}
+.empty{text-align:center;padding:32px 20px;color:var(--muted);font-size:12px;opacity:.6;}
+.loading{text-align:center;padding:20px;color:var(--muted);font-size:12px;}
 .toast{position:fixed;bottom:14px;right:14px;background:var(--dark2);border:1px solid rgba(76,175,130,.4);color:var(--c4);padding:9px 14px;border-radius:9px;font-size:11px;font-weight:700;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:9999;}
 .toast.show{transform:translateY(0);opacity:1;}
 .footer{text-align:center;margin-top:24px;font-size:10px;color:rgba(255,255,255,.1);}
@@ -199,7 +225,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <img class="logo" id="logoImg" alt="Águias">
     <div class="header-text">
       <h1>Equipe Águias</h1>
-      <p>Painel Admin</p>
+      <p>Painel Admin — Júlio</p>
     </div>
   </div>
   <button class="btn-alimentar" onclick="abrirModal()">✏️ Alimentar dados</button>
@@ -208,14 +234,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <div class="tabs">
   <button class="tab-btn active" onclick="showTab('dashboard',this)">📊 Dashboard</button>
   <button class="tab-btn" onclick="showTab('corretores',this)">👥 Corretores</button>
+  <button class="tab-btn" onclick="showTab('presenca',this)">📍 Presença</button>
+  <button class="tab-btn" onclick="showTab('metas',this)">🎯 Metas</button>
   <button class="tab-btn" onclick="showTab('calculadora',this)">🧮 Calculadora</button>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL ALIMENTAR -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title">✏️ Alimentar Dados</div>
+      <div class="modal-title">✏️ Alimentar Dados da Equipe</div>
       <button class="btn-close" onclick="fecharModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -233,14 +261,25 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="mfield"><label>Ano</label><select id="mAno"></select></div>
       </div>
       <div class="modal-row">
-        <div class="mfield"><label>📣 Prospecções</label><input class="mfield-inp" type="number" id="mProsp" min="0" placeholder="0"></div>
-        <div class="mfield"><label>📅 Agendamentos</label><input class="mfield-inp" type="number" id="mAgend" min="0" placeholder="0"></div>
-        <div class="mfield"><label>📁 Pastas</label><input class="mfield-inp" type="number" id="mPastas" min="0" placeholder="0"></div>
-        <div class="mfield"><label>✅ Aprovações</label><input class="mfield-inp" type="number" id="mAprov" min="0" placeholder="0"></div>
-        <div class="mfield"><label>🤝 Atendimentos</label><input class="mfield-inp" type="number" id="mAtend" min="0" placeholder="0"></div>
-        <div class="mfield"><label>🏆 Vendas</label><input class="mfield-inp gold" type="number" id="mVendas" min="0" placeholder="0"></div>
-        <div class="mfield full"><label>💰 Valor total <small>(R$)</small></label><input class="mfield-inp gold" type="text" id="mValor" placeholder="R$ 0,00" oninput="maskV(this)" onfocus="this.select()"></div>
-        <div class="mfield full"><label>🎯 Meta do mês <small>(R$)</small></label><input class="mfield-inp" type="text" id="mMeta" placeholder="R$ 0,00" oninput="maskV(this)" onfocus="this.select()"></div>
+        <div class="mfield"><label>📣 Prospecções</label><input type="number" id="mProsp" min="0" placeholder="0"></div>
+        <div class="mfield"><label>📅 Agendamentos</label><input type="number" id="mAgend" min="0" placeholder="0"></div>
+        <div class="mfield"><label>📁 Pastas</label><input type="number" id="mPastas" min="0" placeholder="0"></div>
+        <div class="mfield"><label>✅ Aprovações</label><input type="number" id="mAprov" min="0" placeholder="0"></div>
+        <div class="mfield"><label>🤝 Atendimentos</label><input type="number" id="mAtend" min="0" placeholder="0"></div>
+        <div class="mfield"><label>🏆 Vendas</label><input type="number" id="mVendas" min="0" placeholder="0"></div>
+        <div class="mfield full"><label>💰 Valor total <small>(R$)</small></label><input type="text" id="mValor" placeholder="R$ 0,00" oninput="maskV(this)" onfocus="this.select()"></div>
+        <div class="mfield full"><label>🎯 Meta do mês <small>(R$)</small></label><input type="text" id="mMeta" placeholder="R$ 0,00" oninput="maskV(this)" onfocus="this.select()"></div>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">🎯 Metas da equipe por métrica</div>
+        <div class="metas-equipe-grid">
+          <div class="me-field"><label>📣 Prosp. meta</label><input type="number" id="mMetaProsp" placeholder="600"></div>
+          <div class="me-field"><label>📅 Agend. meta</label><input type="number" id="mMetaAgend" placeholder="40"></div>
+          <div class="me-field"><label>📁 Pastas meta</label><input type="number" id="mMetaPastas" placeholder="70"></div>
+          <div class="me-field"><label>✅ Aprov. meta</label><input type="number" id="mMetaAprov" placeholder="35"></div>
+          <div class="me-field"><label>🤝 Atend. meta</label><input type="number" id="mMetaAtend" placeholder="25"></div>
+          <div class="me-field"><label>🏆 Vendas meta</label><input type="number" id="mMetaVendas" placeholder="10"></div>
+        </div>
       </div>
       <div class="modal-btns">
         <button class="btn-save" onclick="salvarDados()">💾 Salvar</button>
@@ -260,24 +299,41 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- ═══ DASHBOARD ═══ -->
 <div class="section active" id="section-dashboard">
+
+  <!-- QUEM ESTÁ NO STAND -->
+  <div class="card" id="standCard">
+    <div class="card-title">
+      <span>📍 No Stand Agora</span>
+      <span id="standData" style="font-family:'DM Sans';font-size:10px;color:var(--muted);font-weight:400;"></span>
+    </div>
+    <div id="standBody"><div class="loading">⏳ Carregando...</div></div>
+  </div>
+
+  <!-- MÉTRICAS DA EQUIPE -->
   <div class="metrics-grid" id="metricsGrid">
     <div class="empty" style="grid-column:1/-1">Nenhum dado ainda.<br>Clique em <b>✏️ Alimentar dados</b> para começar.</div>
   </div>
+
+  <!-- GRÁFICO EVOLUÇÃO -->
   <div class="chart-card" id="chartCard" style="display:none">
-    <div class="chart-title">📈 Evolução Mensal</div>
+    <div class="chart-title">📈 Evolução Mensal da Equipe</div>
     <canvas id="mainChart" height="200"></canvas>
     <div class="chart-legend" id="chartLegend"></div>
   </div>
-  <div class="rank-card" id="rankCard" style="display:none">
-    <div class="rank-title">🏆 Ranking de Métricas</div>
+
+  <!-- RANKING -->
+  <div class="card" id="rankCard" style="display:none">
+    <div class="card-title">🏆 Ranking — Vendas do Mês</div>
     <div id="rankBody"></div>
   </div>
+
+  <!-- HISTÓRICO TABELA -->
   <div class="hist-card" id="histCard" style="display:none">
-    <div class="hist-title">📋 Histórico por Mês</div>
+    <div class="chart-title">📋 Histórico por Mês</div>
     <div style="overflow-x:auto">
       <table class="hist-tbl">
         <thead><tr>
-          <th>Mês</th><th>Prosp.</th><th>Agend.</th><th>Pastas</th><th>Aprov.</th><th>Atend.</th><th>Vendas</th><th>Valor</th><th>Comissão</th><th></th>
+          <th>Mês</th><th>Prosp.</th><th>Agend.</th><th>Pastas</th><th>Aprov.</th><th>Atend.</th><th>Vendas</th><th>Valor</th><th>Comissão</th>
         </tr></thead>
         <tbody id="histBody"></tbody>
       </table>
@@ -287,9 +343,32 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- ═══ CORRETORES ═══ -->
 <div class="section" id="section-corretores">
-  <div class="corr-card">
-    <div class="corr-title">👥 Dados dos Corretores — <span id="corrMesLabel">—</span></div>
-    <div id="corrBody"><div class="empty">Nenhum dado de corretor ainda.<br>Quando eles enviarem pelo link, aparecerá aqui.</div></div>
+  <div class="card">
+    <div class="card-title">👥 Corretores — <span id="corrMesLabel">—</span></div>
+    <div id="corrBody"><div class="loading">⏳ Carregando...</div></div>
+  </div>
+</div>
+
+<!-- ═══ PRESENÇA ═══ -->
+<div class="section" id="section-presenca">
+
+  <div class="card">
+    <div class="card-title">📅 Frequência do Mês — <span id="freqMesLabel">—</span></div>
+    <div id="freqBody"><div class="loading">⏳ Carregando...</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗺️ Locais Mais Frequentes</div>
+    <div id="clustersBody"><div class="loading">⏳ Carregando...</div></div>
+  </div>
+
+</div>
+
+<!-- ═══ METAS ═══ -->
+<div class="section" id="section-metas">
+  <div class="card">
+    <div class="card-title">🎯 Metas Individuais — <span id="metasMesLabel">—</span></div>
+    <div id="metasBody"><div class="loading">⏳ Carregando...</div></div>
   </div>
 </div>
 
@@ -321,7 +400,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="taxa">↓ a cada 2,5 atendimentos → 1 venda</div>
       <div class="res-row gold-row"><div class="res-label">🏆 Vendas</div><div class="res-mes g" id="cVendas">—</div><div class="res-sem g" id="cVendasS">—</div><div class="res-dia g" id="cVendasD">—</div></div>
       <div class="res-bottom">
-        <div><div class="res-bottom-label">🦅 Comissão estimada (2,25%)</div><div class="res-bottom-sub" id="cVolLabel">sobre R$ —</div></div>
+        <div><div style="font-size:12px;color:var(--text);">🦅 Comissão estimada (2,25%)</div><div style="font-size:10px;color:var(--muted);margin-top:2px;" id="cVolLabel">sobre R$ —</div></div>
         <div class="res-bottom-val" id="cComissao">R$ 0,00</div>
       </div>
       <div class="aviso" id="cAviso" style="display:none"></div>
@@ -339,8 +418,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 
-  <div class="calc-hist-card" id="calcHistCard" style="display:none">
-    <div class="hist-title" style="font-family:'Cinzel',serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+  <div class="card" id="calcHistCard" style="display:none">
+    <div class="card-title">
       <span>📋 Histórico por Corretor</span>
       <button class="btn-o" style="font-size:10px;padding:5px 10px;" onclick="limparHistCalc()">🗑 Limpar tudo</button>
     </div>
@@ -348,31 +427,30 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </div>
 
-<div class="footer">Desenvolvido por <b>Anna Paula Lopes</b></div>
-</div><!-- /page -->
+<div class="footer">Painel Admin — <b>Equipe Águias</b></div>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const SHEETS_URL='https://script.google.com/macros/s/AKfycby1jYbTYtkAv4eIRVYmwIev6bIH9zYXAMVUAUjh5RQAsLJ6_M79rVLpGEkQDN301NpBfQ/exec';
-
 document.getElementById('logoImg').src='https://lopesap.github.io/equipe-aguias/logo.jpg';
+
+const SHEETS_URL='https://script.google.com/macros/s/AKfycby1jYbTYtkAv4eIRVYmwIev6bIH9zYXAMVUAUjh5RQAsLJ6_M79rVLpGEkQDN301NpBfQ/exec';
 
 const MESES_N=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const MESES_A=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const METRICAS=[
-  {key:'prosp', label:'Prospecções', icon:'📣', cor:'#4A90D9', meta:600},
-  {key:'agend', label:'Agendamentos',icon:'📅', cor:'#9B8EC4', meta:40},
-  {key:'pastas',label:'Pastas',      icon:'📁', cor:'#E8943A', meta:70},
-  {key:'aprov', label:'Aprovações',  icon:'✅', cor:'#4CAF82', meta:35},
-  {key:'atend', label:'Atendimentos',icon:'🤝', cor:'#C9A84C', meta:25},
-  {key:'vendas',label:'Vendas',      icon:'🏆', cor:'#C0392B', meta:10},
+  {key:'prosp', label:'Prospecções', icon:'📣', cor:'#4A90D9'},
+  {key:'agend', label:'Agendamentos',icon:'📅', cor:'#9B8EC4'},
+  {key:'pastas',label:'Pastas',      icon:'📁', cor:'#E8943A'},
+  {key:'aprov', label:'Aprovações',  icon:'✅', cor:'#4CAF82'},
+  {key:'atend', label:'Atendimentos',icon:'🤝', cor:'#C9A84C'},
+  {key:'vendas',label:'Vendas',      icon:'🏆', cor:'#C0392B'},
 ];
 const TAXAS={prosp:60,agend:4,pastas:7,aprov:3.5,atend:2.5};
 
 const hoje=new Date();
-const diasMes=new Date(hoje.getFullYear(),hoje.getMonth()+1,0).getDate();
-const semanas=diasMes/7;
+const hojeStr=hoje.toLocaleDateString('pt-BR');
 
 // Anos modal
 const selAno=document.getElementById('mAno');
@@ -383,11 +461,17 @@ for(let a=hoje.getFullYear()-1;a<=hoje.getFullYear()+1;a++){
 }
 document.getElementById('mMes').value=hoje.getMonth();
 
-// ── DADOS ──
+// ── DADOS LOCAL ──
 let dados=JSON.parse(localStorage.getItem('aguias_dash2')||'{}');
-let corretores=JSON.parse(localStorage.getItem('aguias_corretores')||'{}');
 let calcHist=JSON.parse(localStorage.getItem('aguias_calc_hist')||'[]');
 let mesSel=`${hoje.getFullYear()}-${hoje.getMonth()}`;
+let sheetsCache={};
+
+function diasDoMes(mes,ano){return new Date(ano,mes+1,0).getDate();}
+function getMesAno(){const[ano,mes]=mesSel.split('-');return{mes:parseInt(mes),ano:parseInt(ano)};}
+function fmtM(v){return (v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
+function parseV(v){if(!v)return 0;return parseFloat((v+'').replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.'))||0;}
+function fmt(n){return (n||0).toLocaleString('pt-BR');}
 
 // ── TABS ──
 function showTab(name,btn){
@@ -397,6 +481,9 @@ function showTab(name,btn){
   btn.classList.add('active');
   const toolbar=document.getElementById('dashToolbar');
   toolbar.style.display=name==='dashboard'?'flex':'none';
+  if(name==='corretores')renderCorretores();
+  if(name==='presenca')renderPresenca();
+  if(name==='metas')renderMetas();
 }
 
 // ── MODAL ──
@@ -410,7 +497,15 @@ function abrirModal(){
   document.getElementById('mVendas').value=d.vendas||'';
   document.getElementById('mValor').value=d.valor?fmtM(d.valor):'';
   document.getElementById('mMeta').value=d.meta?fmtM(d.meta):'';
-  const [ano,mes]=mesSel.split('-');
+  // Metas da equipe editáveis
+  const me=d.metasEquipe||{};
+  document.getElementById('mMetaProsp').value=me.prosp||600;
+  document.getElementById('mMetaAgend').value=me.agend||40;
+  document.getElementById('mMetaPastas').value=me.pastas||70;
+  document.getElementById('mMetaAprov').value=me.aprov||35;
+  document.getElementById('mMetaAtend').value=me.atend||25;
+  document.getElementById('mMetaVendas').value=me.vendas||10;
+  const[ano,mes]=mesSel.split('-');
   document.getElementById('mMes').value=mes;
   document.getElementById('mAno').value=ano;
   document.getElementById('modalOverlay').classList.add('show');
@@ -418,16 +513,12 @@ function abrirModal(){
 function fecharModal(){document.getElementById('modalOverlay').classList.remove('show');}
 document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))fecharModal();});
 function limparModal(){['mProsp','mAgend','mPastas','mAprov','mAtend','mVendas','mValor','mMeta'].forEach(id=>document.getElementById(id).value='');}
-
 function maskV(input){
   let v=input.value.replace(/\D/g,'');
   if(!v){input.value='';return;}
   v=(parseInt(v)/100).toFixed(2);
   input.value='R$ '+parseFloat(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
-function parseV(v){if(!v)return 0;return parseFloat((v+'').replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.'))||0;}
-function fmtM(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});}
-function fmt(n){return (n||0).toLocaleString('pt-BR');}
 
 function salvarDados(){
   const mes=document.getElementById('mMes').value;
@@ -443,112 +534,144 @@ function salvarDados(){
     vendas:parseInt(document.getElementById('mVendas').value)||0,
     valor:parseV(document.getElementById('mValor').value),
     meta:parseV(document.getElementById('mMeta').value),
+    metasEquipe:{
+      prosp:parseInt(document.getElementById('mMetaProsp').value)||600,
+      agend:parseInt(document.getElementById('mMetaAgend').value)||40,
+      pastas:parseInt(document.getElementById('mMetaPastas').value)||70,
+      aprov:parseInt(document.getElementById('mMetaAprov').value)||35,
+      atend:parseInt(document.getElementById('mMetaAtend').value)||25,
+      vendas:parseInt(document.getElementById('mMetaVendas').value)||10,
+    }
   };
   localStorage.setItem('aguias_dash2',JSON.stringify(dados));
   mesSel=key;fecharModal();renderTudo();
   showToast('✅ Dados salvos — '+MESES_N[mes]+' '+ano);
 }
 
-function delMes(key){
-  if(!confirm('Apagar dados de '+MESES_N[dados[key]?.mes||0]+'?'))return;
-  delete dados[key];
-  localStorage.setItem('aguias_dash2',JSON.stringify(dados));
-  const keys=Object.keys(dados);
-  mesSel=keys.length?keys[keys.length-1]:`${hoje.getFullYear()}-${hoje.getMonth()}`;
-  renderTudo();
-}
-
-// ── RENDER ──
-let chartInst=null;
-
-// Cache de dados do Sheets por mês
-let sheetsCache={};
-
-async function carregarDoSheets(mes,ano){
+// ── SHEETS ──
+async function carregarSheets(mes,ano){
   const key=`${ano}-${mes}`;
   if(sheetsCache[key])return sheetsCache[key];
   try{
     const r=await fetch(`${SHEETS_URL}?action=getCorretor&mes=${mes}&ano=${ano}`);
     const d=await r.json();
     const lista=d.corretores||[];
-    // Agrupa por corretor (soma dias)
-    const porCorretor={};
-    lista.forEach(c=>{
-      if(!porCorretor[c.nome])porCorretor[c.nome]={nome:c.nome,prosp:0,agend:0,pastas:0,aprov:0,atend:0,vendas:0,valor:0,comissao:0,dias:0};
-      const p=porCorretor[c.nome];
-      p.prosp+=parseInt(c.prosp)||0;p.agend+=parseInt(c.agend)||0;
-      p.pastas+=parseInt(c.pastas)||0;p.aprov+=parseInt(c.aprov)||0;
-      p.atend+=parseInt(c.atend)||0;p.vendas+=parseInt(c.vendas)||0;
-      p.valor+=parseFloat(c.valor)||0;p.comissao+=parseFloat(c.comissao)||0;
-      p.dias++;
-    });
-    const corretoresList=Object.values(porCorretor);
-    // Total da equipe
     const total={prosp:0,agend:0,pastas:0,aprov:0,atend:0,vendas:0,valor:0,comissao:0};
-    corretoresList.forEach(c=>{
-      total.prosp+=c.prosp;total.agend+=c.agend;total.pastas+=c.pastas;
-      total.aprov+=c.aprov;total.atend+=c.atend;total.vendas+=c.vendas;
-      total.valor+=c.valor;total.comissao+=c.comissao;
+    lista.forEach(c=>{
+      ['prosp','agend','pastas','aprov','atend','vendas'].forEach(k=>total[k]+=(Number(c[k])||0));
+      total.valor+=(Number(c.valor)||0);
+      total.comissao+=(Number(c.comissao)||0);
     });
-    sheetsCache[key]={total,corretores:corretoresList,mes,ano};
+    sheetsCache[key]={total,corretores:lista,mes,ano};
     return sheetsCache[key];
   }catch(e){return null;}
 }
 
-async function renderTudo(){
-  await renderMesTabs();
-  await renderMetrics();
-  renderChart();
-  await renderRanking();
-  renderHistorico();
-  await renderCorretores();
+async function carregarCheckins(mes,ano){
+  try{
+    const r=await fetch(`${SHEETS_URL}?action=getCheckins`);
+    const d=await r.json();
+    return d.checkins||[];
+  }catch(e){return[];}
 }
 
-async function renderMesTabs(){
-  const tabs=document.getElementById('mesTabs');
-  // Mostrar meses com dados no Sheets + dados locais
+async function carregarMetas(mes,ano){
+  try{
+    const r=await fetch(`${SHEETS_URL}?action=getMetas&mes=${mes}&ano=${ano}`);
+    const d=await r.json();
+    return d.metas||[];
+  }catch(e){return[];}
+}
+
+// ── RENDER TUDO ──
+async function renderTudo(){
+  renderMesTabs();
+  await renderDashboard();
+}
+
+function renderMesTabs(){
   const keys=Object.keys(dados).sort();
-  // Adicionar mês atual sempre
   const keyAtual=`${hoje.getFullYear()}-${hoje.getMonth()}`;
   if(!keys.includes(keyAtual))keys.push(keyAtual);
-  if(!keys.length){tabs.innerHTML='<span style="font-size:11px;color:var(--muted)">Carregando...</span>';return;}
-  tabs.innerHTML=keys.map(k=>{
-    const [ano,mes]=k.split('-');
+  document.getElementById('mesTabs').innerHTML=keys.map(k=>{
+    const[ano,mes]=k.split('-');
     const label=MESES_A[parseInt(mes)]+'/'+String(ano).slice(2);
     return `<button class="mes-tab has-data ${k===mesSel?'active':''}" onclick="selecionarMes('${k}')">${label}</button>`;
   }).join('');
 }
 
-async function selecionarMes(key){mesSel=key;await renderTudo();}
+async function selecionarMes(key){
+  mesSel=key;
+  renderMesTabs();
+  await renderDashboard();
+}
 
-async function renderMetrics(){
+async function renderDashboard(){
+  const{mes,ano}=getMesAno();
+  const sheet=await carregarSheets(mes,ano);
+  renderStand();
+  renderMetrics(sheet);
+  renderChart();
+  renderRanking(sheet);
+  renderHistorico();
+}
+
+// ── STAND ──
+async function renderStand(){
+  const div=document.getElementById('standBody');
+  document.getElementById('standData').textContent=hojeStr;
+  try{
+    const r=await fetch(`${SHEETS_URL}?action=getCheckins&data=${hojeStr.replace(/\//g,'%2F')}`);
+    const d=await r.json();
+    const cis=d.checkins||[];
+    if(!cis.length){div.innerHTML='<div class="empty" style="padding:12px">Nenhum corretor no stand hoje.</div>';return;}
+    // Unique por nome (último check-in)
+    const map={};
+    cis.forEach(c=>map[c.nome]=c);
+    const lista=Object.values(map);
+    div.innerHTML=`<div class="stand-grid">${lista.map(c=>`
+      <div class="stand-item">
+        <div class="stand-dot"></div>
+        <div><div class="stand-name">${c.nome}</div><div class="stand-hora">${c.hora_servidor||'—'}</div></div>
+      </div>`).join('')}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:8px;">${lista.length} corretor${lista.length!==1?'es':''} presente${lista.length!==1?'s':''} hoje</div>`;
+  }catch(e){
+    div.innerHTML='<div class="empty" style="padding:12px">Erro ao carregar. Verifique a conexão.</div>';
+  }
+}
+
+// ── METRICS ──
+function renderMetrics(sheet){
   const grid=document.getElementById('metricsGrid');
-  const [ano,mes]=mesSel.split('-');
-  grid.innerHTML='<div class="empty" style="grid-column:1/-1">⏳ Carregando...</div>';
-  const sheet=await carregarDoSheets(mes,ano);
   if(!sheet||!sheet.corretores.length){
-    grid.innerHTML='<div class="empty" style="grid-column:1/-1">Nenhum dado ainda.<br>Os corretores precisam enviar pelo link.</div>';
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1">Nenhum dado dos corretores ainda.<br>Os corretores precisam lançar pelo App Corretor.</div>';
     document.getElementById('rankCard').style.display='none';
     return;
   }
   const d=sheet.total;
-  const meta=dados[mesSel]?.meta||0;
+  const{mes,ano}=getMesAno();
+  const local=dados[mesSel]||{};
+  const me=local.metasEquipe||{prosp:600,agend:40,pastas:70,aprov:35,atend:25,vendas:10};
+  const meta=local.meta||0;
   const pctMeta=meta>0?Math.min((d.valor/meta)*100,100):0;
+
   grid.innerHTML=METRICAS.map(m=>{
-    const val=d[m.key]||0;const pct=Math.min((val/m.meta)*100,100);
+    const val=d[m.key]||0;
+    const metaM=me[m.key]||1;
+    const pct=Math.min((val/metaM)*100,100);
     return `<div class="mc" style="--mcol:${m.cor}">
       <div class="mc-label">${m.icon} ${m.label}</div>
       <div class="mc-val">${fmt(val)}</div>
-      <div class="mc-sub">Meta equipe: ${fmt(m.meta)}</div>
+      <div class="mc-sub">Meta: ${fmt(metaM)}</div>
       <div class="mc-bar"><div class="mc-fill" style="width:${pct}%;background:${m.cor}"></div></div>
-      <div class="mc-pct" style="color:${m.cor}">${Math.round(pct)}% da meta</div>
+      <div class="mc-pct" style="color:${m.cor}">${Math.round(pct)}%</div>
     </div>`;
   }).join('')+`
   <div class="mc mc-full" style="--mcol:var(--gold)">
     <div>
-      <div class="mc-label">💰 Valor Total da Equipe</div>
+      <div class="mc-label">💰 Valor Total Vendido</div>
       <div class="mc-val" style="font-size:clamp(16px,2.5vw,24px)">${fmtM(d.valor||0)}</div>
-      ${meta>0?`<div class="mc-bar" style="margin-top:7px;max-width:260px"><div class="mc-fill" style="width:${pctMeta}%;background:var(--gold)"></div></div><div class="mc-pct" style="color:var(--gold)">${Math.round(pctMeta)}% da meta</div>`:''}
+      ${meta>0?`<div class="mc-bar" style="margin-top:7px;max-width:260px"><div class="mc-fill" style="width:${pctMeta}%;background:var(--gold)"></div></div><div class="mc-pct" style="color:var(--gold)">${Math.round(pctMeta)}% da meta mensal</div>`:''}
     </div>
     <div style="text-align:right">
       <div class="mc-label">🦅 Comissão Total (2,25%)</div>
@@ -557,6 +680,8 @@ async function renderMetrics(){
   </div>`;
 }
 
+// ── GRÁFICO ──
+let chartInst=null;
 function renderChart(){
   const keys=Object.keys(sheetsCache).sort();
   const card=document.getElementById('chartCard');
@@ -577,28 +702,25 @@ function renderChart(){
   });
 }
 
-async function renderRanking(){
+// ── RANKING ──
+function renderRanking(sheet){
   const card=document.getElementById('rankCard');
-  const [ano,mes]=mesSel.split('-');
-  const sheet=await carregarDoSheets(mes,ano);
   if(!sheet||!sheet.corretores.length){card.style.display='none';return;}
   card.style.display='block';
-  // Ranking por vendas
   const sorted=[...sheet.corretores].sort((a,b)=>b.vendas-a.vendas);
   const pi=['🥇','🥈','🥉'];
-  document.getElementById('rankBody').innerHTML=`
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Por Vendas</div>
-    ${sorted.map((c,i)=>`
+  document.getElementById('rankBody').innerHTML=sorted.map((c,i)=>`
     <div class="rank-row">
       <div class="rank-pos">${pi[i]||i+1}</div>
       <div class="rank-info">
-        <div class="rank-metric">👤 ${c.nome}</div>
-        <div class="rank-name">${fmt(c.vendas)} vendas · ${fmtM(c.comissao)} comissão</div>
+        <div class="rank-name">${c.nome}</div>
+        <div class="rank-sub">📣 ${fmt(c.prosp)} prosp. · 🦅 ${fmtM(c.comissao||0)}</div>
       </div>
-      <div class="rank-pct" style="color:var(--gold)">${fmt(c.prosp)} prosp.</div>
-    </div>`).join('')}`;
+      <div class="rank-val">${fmt(c.vendas)} vendas</div>
+    </div>`).join('');
 }
 
+// ── HISTÓRICO ──
 function renderHistorico(){
   const card=document.getElementById('histCard');
   const keys=Object.keys(sheetsCache).sort().reverse();
@@ -614,30 +736,26 @@ function renderHistorico(){
       <td><b style="color:var(--gold)">${fmt(d.vendas)}</b></td>
       <td>${fmtM(d.valor||0)}</td>
       <td style="color:var(--gold);font-weight:700">${fmtM(d.comissao||0)}</td>
-      <td>—</td>
     </tr>`;
   }).join('');
 }
 
+// ── CORRETORES ──
 async function renderCorretores(){
   const body=document.getElementById('corrBody');
-  const label=document.getElementById('corrMesLabel');
-  const [ano,mes]=mesSel.split('-');
-  if(dados[mesSel])label.textContent=MESES_N[dados[mesSel].mes]+' '+dados[mesSel].ano;
-  else label.textContent=MESES_N[parseInt(mes)]+' '+ano;
-
-  body.innerHTML='<div class="empty">⏳ Carregando...</div>';
-
+  const{mes,ano}=getMesAno();
+  document.getElementById('corrMesLabel').textContent=MESES_N[mes]+' '+ano;
+  body.innerHTML='<div class="loading">⏳ Carregando...</div>';
   try{
     const r=await fetch(`${SHEETS_URL}?action=getCorretor&mes=${mes}&ano=${ano}`);
     const d=await r.json();
     const lista=d.corretores||[];
-    if(!lista.length){body.innerHTML='<div class="empty">Nenhum dado de corretor para este mês.<br>Quando eles enviarem pelo link, aparecerá aqui.</div>';return;}
-    body.innerHTML=lista.map((c,i)=>`
+    if(!lista.length){body.innerHTML='<div class="empty">Nenhum dado de corretor para este mês.</div>';return;}
+    body.innerHTML=lista.map(c=>`
       <div class="corr-item">
         <div class="corr-header">
           <div class="corr-name">👤 ${c.nome}</div>
-          <div class="corr-badge">${c.data||''}</div>
+          <div class="corr-badge">${fmt(c.dias||0)} dia${(c.dias||0)!==1?'s':''} lançados</div>
         </div>
         <div class="corr-grid">
           <div class="corr-stat"><div class="corr-stat-label">📣 Prosp.</div><div class="corr-stat-val">${fmt(c.prosp)}</div></div>
@@ -645,27 +763,151 @@ async function renderCorretores(){
           <div class="corr-stat"><div class="corr-stat-label">📁 Pastas</div><div class="corr-stat-val">${fmt(c.pastas)}</div></div>
           <div class="corr-stat"><div class="corr-stat-label">✅ Aprov.</div><div class="corr-stat-val">${fmt(c.aprov)}</div></div>
           <div class="corr-stat"><div class="corr-stat-label">🤝 Atend.</div><div class="corr-stat-val">${fmt(c.atend)}</div></div>
-          <div class="corr-stat"><div class="corr-stat-label">🏆 Vendas</div><div class="corr-stat-val">${fmt(c.vendas)}</div></div>
+          <div class="corr-stat"><div class="corr-stat-label">🏆 Vendas</div><div class="corr-stat-val" style="color:var(--gold)">${fmt(c.vendas)}</div></div>
         </div>
-        <div class="corr-comissao">
-          <div class="corr-com-label">🦅 Comissão (2,25%)</div>
-          <div class="corr-com-val">${fmtM((c.valor||0)*0.0225)}</div>
+        <div class="corr-bottom">
+          <div class="corr-info-box">
+            <div class="corr-info-label">💰 Valor vendido</div>
+            <div class="corr-info-val">${fmtM(c.valor||0)}</div>
+          </div>
+          <div class="corr-info-box">
+            <div class="corr-info-label">🦅 Comissão</div>
+            <div class="corr-info-val">${fmtM((c.valor||0)*0.0225)}</div>
+          </div>
+        </div>
+      </div>`).join('');
+  }catch(e){body.innerHTML='<div class="empty">Erro ao carregar. Verifique a conexão.</div>';}
+}
+
+// ── PRESENÇA ──
+async function renderPresenca(){
+  const{mes,ano}=getMesAno();
+  document.getElementById('freqMesLabel').textContent=MESES_N[mes]+' '+ano;
+  const freqBody=document.getElementById('freqBody');
+  const clustBody=document.getElementById('clustersBody');
+  freqBody.innerHTML='<div class="loading">⏳ Carregando...</div>';
+  clustBody.innerHTML='<div class="loading">⏳ Carregando...</div>';
+  try{
+    const cis=await carregarCheckins(mes,ano);
+    if(!cis.length){
+      freqBody.innerHTML='<div class="empty">Nenhum check-in registrado ainda.</div>';
+      clustBody.innerHTML='<div class="empty">Acumule check-ins para ver a análise.</div>';
+      return;
+    }
+    // Frequência por corretor
+    const porCorretor={};
+    cis.forEach(ci=>{
+      if(!porCorretor[ci.nome])porCorretor[ci.nome]={nome:ci.nome,dias:new Set(),semana:new Set()};
+      porCorretor[ci.nome].dias.add(ci.data);
+      // semana atual
+      const d=ci.data.split('/');
+      if(d.length===3){
+        const dt=new Date(d[2],d[1]-1,d[0]);
+        const diffDias=Math.floor((hoje-dt)/(1000*60*60*24));
+        if(diffDias<=7)porCorretor[ci.nome].semana.add(ci.data);
+      }
+    });
+    const diasTotal=diasDoMes(mes,ano);
+    freqBody.innerHTML=Object.values(porCorretor).map(c=>{
+      const diasMes=c.dias.size;
+      const diasSem=c.semana.size;
+      const pct=Math.round((diasMes/diasTotal)*100);
+      return `<div class="freq-item">
+        <div>
+          <div class="freq-name">👤 ${c.nome}</div>
+          <div style="height:5px;width:120px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-top:5px;">
+            <div style="height:100%;border-radius:99px;background:var(--gold);width:${pct}%"></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px;">${pct}% do mês</div>
+        </div>
+        <div class="freq-vals">
+          <div class="freq-stat">
+            <div class="freq-stat-val" style="color:var(--gold)">${diasMes}</div>
+            <div class="freq-stat-label">dias/mês</div>
+          </div>
+          <div class="freq-stat">
+            <div class="freq-stat-val" style="color:var(--c1)">${diasSem}</div>
+            <div class="freq-stat-label">esta semana</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Clusters
+    const RAIO=300;
+    const clusters=[];
+    cis.forEach(ci=>{
+      const lat=parseFloat(ci.lat);const lng=parseFloat(ci.lng);
+      if(!lat||!lng)return;
+      let found=false;
+      for(const cl of clusters){
+        if(calcDist(lat,lng,cl.lat,cl.lng)<=RAIO){
+          cl.count++;cl.lat=(cl.lat*(cl.count-1)+lat)/cl.count;cl.lng=(cl.lng*(cl.count-1)+lng)/cl.count;
+          found=true;break;
+        }
+      }
+      if(!found)clusters.push({lat,lng,count:1});
+    });
+    clusters.sort((a,b)=>b.count-a.count);
+    const top=clusters.slice(0,5);
+    if(!top.length){clustBody.innerHTML='<div class="empty">Dados insuficientes para análise.</div>';return;}
+    clustBody.innerHTML=top.map((cl,i)=>`
+      <div class="cluster-item">
+        <div class="cluster-pos">${['🥇','🥈','🥉','4º','5º'][i]}</div>
+        <div class="cluster-info">
+          <div style="font-size:12px;font-weight:600;color:var(--cream);">Local ${i+1}</div>
+          <div class="cluster-coords">${cl.lat.toFixed(4)}, ${cl.lng.toFixed(4)}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="cluster-count">${cl.count}</div>
+          <div class="cluster-label">check-ins</div>
         </div>
       </div>`).join('');
   }catch(e){
-    body.innerHTML='<div class="empty">Erro ao carregar. Verifique a conexão.</div>';
+    freqBody.innerHTML='<div class="empty">Erro ao carregar. Verifique a conexão.</div>';
+    clustBody.innerHTML='';
   }
 }
 
-function delCorretor(key,idx){
-  if(!confirm('Remover este corretor?'))return;
-  corretores[key].splice(idx,1);
-  localStorage.setItem('aguias_corretores',JSON.stringify(corretores));
-  renderCorretores();
+function calcDist(lat1,lng1,lat2,lng2){
+  const R=6371000,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ── METAS ──
+async function renderMetas(){
+  const{mes,ano}=getMesAno();
+  document.getElementById('metasMesLabel').textContent=MESES_N[mes]+' '+ano;
+  const body=document.getElementById('metasBody');
+  body.innerHTML='<div class="loading">⏳ Carregando...</div>';
+  try{
+    const[metas,sheet]=await Promise.all([carregarMetas(mes,ano),carregarSheets(mes,ano)]);
+    if(!metas.length){body.innerHTML='<div class="empty">Nenhum corretor definiu meta ainda.<br>Quando definirem no App Corretor, aparece aqui.</div>';return;}
+    // Monta comissão por corretor
+    const comMap={};
+    (sheet?.corretores||[]).forEach(c=>comMap[c.nome]=(c.comissao||0));
+    body.innerHTML=metas.map(m=>{
+      const metaV=parseFloat(m.meta)||0;
+      const comAtual=comMap[m.nome]||0;
+      const pct=metaV>0?Math.min((comAtual/metaV)*100,100):0;
+      const falta=Math.max(metaV-comAtual,0);
+      return `<div class="meta-item">
+        <div class="meta-item-header">
+          <div class="meta-item-name">👤 ${m.nome}</div>
+          <div class="meta-item-val">${fmtM(metaV)}</div>
+        </div>
+        <div class="meta-bar"><div class="meta-bar-fill" style="width:${pct}%"></div></div>
+        <div class="meta-pct">${Math.round(pct)}% atingido · Comissão atual: ${fmtM(comAtual)} · ${falta>0?'Faltam '+fmtM(falta):'🏆 Meta batida!'}</div>
+      </div>`;
+    }).join('');
+  }catch(e){body.innerHTML='<div class="empty">Erro ao carregar metas.</div>';}
 }
 
 // ── CALCULADORA ──
-document.getElementById('cDiasBadge').textContent=diasMes+' dias — '+MESES_N[hoje.getMonth()];
+const diasMesCalc=diasDoMes(hoje.getMonth(),hoje.getFullYear());
+const semanas=diasMesCalc/7;
+document.getElementById('cDiasBadge').textContent=diasMesCalc+' dias — '+MESES_N[hoje.getMonth()];
 
 function maskC(input){
   let v=input.value.replace(/\D/g,'');
@@ -675,7 +917,7 @@ function maskC(input){
   calcular();
 }
 function parseC(v){if(!v)return 0;return parseFloat((v+'').replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.'))||0;}
-function fmtD(n){const pd=n/diasMes;return pd<1?pd.toFixed(2)+'/dia':Math.ceil(pd)+'/dia';}
+function fmtD(n){const pd=n/diasMesCalc;return pd<1?pd.toFixed(2)+'/dia':Math.ceil(pd)+'/dia';}
 function fmtS(n){const ps=n/semanas;return ps<1?ps.toFixed(1)+'/sem':Math.ceil(ps)+'/sem';}
 function set3(b,v){
   document.getElementById('c'+b).textContent=v.toLocaleString('pt-BR');
@@ -711,13 +953,14 @@ function salvarCalcCorretor(){
   const ticket=parseC(document.getElementById('cTicket').value);
   if(!ganho||!ticket){showToast('Preencha os campos primeiro','warn');return;}
   const vendas=Math.ceil((ganho/0.0225)/ticket);
-  const atend=Math.ceil(vendas*TAXAS.atend);
-  const aprov=Math.ceil(vendas*TAXAS.aprov);
-  const pastas=Math.ceil(vendas*TAXAS.pastas);
-  const agend=Math.ceil(vendas*TAXAS.agend);
-  const prosp=Math.ceil(vendas*TAXAS.prosp);
   const vol=vendas*ticket;const com=vol*0.0225;
-  calcHist.unshift({id:Date.now(),nome,ganho,ticket,vendas,atend,aprov,pastas,agend,prosp,vol,com,data:new Date().toLocaleDateString('pt-BR'),mes:MESES_N[hoje.getMonth()]});
+  calcHist.unshift({
+    id:Date.now(),nome,ganho,ticket,
+    vendas,atend:Math.ceil(vendas*TAXAS.atend),aprov:Math.ceil(vendas*TAXAS.aprov),
+    pastas:Math.ceil(vendas*TAXAS.pastas),agend:Math.ceil(vendas*TAXAS.agend),
+    prosp:Math.ceil(vendas*TAXAS.prosp),vol,com,
+    data:hoje.toLocaleDateString('pt-BR'),mes:MESES_N[hoje.getMonth()]
+  });
   localStorage.setItem('aguias_calc_hist',JSON.stringify(calcHist));
   renderCalcHist();showToast('✅ Cálculo salvo para '+nome+'!');
   document.getElementById('cNome').value='';
@@ -733,7 +976,7 @@ function renderCalcHist(){
   if(!calcHist.length){card.style.display='none';return;}
   card.style.display='block';
   document.getElementById('calcHistBody').innerHTML=calcHist.map(h=>`
-    <div class="calc-hist-item" id="chi-${h.id}">
+    <div class="calc-hist-item">
       <button class="btn-del-ch" onclick="delCalcHist(${h.id})">✕</button>
       <div class="calc-hist-name">👤 ${h.nome}</div>
       <div class="calc-hist-meta">${h.mes} · ${h.data} · Meta: ${fmtM(h.ganho)} · Ticket: ${fmtM(h.ticket)}</div>
