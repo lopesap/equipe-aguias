@@ -7,290 +7,155 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1923; min-height: 100vh; color: #fff; }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #0f1923;
-    min-height: 100vh;
-    color: #fff;
+  /* MODAL NOME CORRETOR */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; padding: 24px;
+  }
+  .modal-box {
+    background: #1a2a3a; border-radius: 18px; padding: 30px 24px;
+    width: 100%; max-width: 380px; border: 2px solid #00c897; text-align: center;
+  }
+  .modal-box h2 { font-size: 20px; margin-bottom: 8px; }
+  .modal-box p  { font-size: 14px; color: #7a9ab5; margin-bottom: 20px; line-height: 1.5; }
+  .modal-box input {
+    width: 100%; background: #0f1923; border: 1.5px solid #253d52;
+    border-radius: 10px; color: #fff; font-size: 16px; padding: 13px 14px;
+    outline: none; margin-bottom: 16px; text-align: center;
+  }
+  .modal-box input:focus { border-color: #00c897; }
+  .modal-btn {
+    width: 100%; background: #00c897; color: #0f1923; border: none;
+    border-radius: 12px; font-size: 16px; font-weight: 800; padding: 15px;
+    cursor: pointer;
   }
 
   header {
-    background: #1a2a3a;
-    padding: 16px 20px 13px;
+    background: #1a2a3a; padding: 16px 20px 13px;
     border-bottom: 2px solid #00c897;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
   }
-
   .header-left h1 { font-size: 15px; font-weight: 800; color: #fff; line-height: 1.3; }
   .header-left p  { font-size: 11px; color: #7a9ab5; margin-top: 2px; }
-
-  .badge {
-    background: #00c897;
-    color: #0f1923;
-    font-size: 12px;
-    font-weight: 800;
-    border-radius: 20px;
-    padding: 4px 11px;
-    white-space: nowrap;
-    margin-left: 10px;
-    flex-shrink: 0;
-  }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .badge { background: #00c897; color: #0f1923; font-size: 12px; font-weight: 800; border-radius: 20px; padding: 4px 11px; white-space: nowrap; }
+  .corretor-tag { font-size: 11px; color: #7a9ab5; }
+  .corretor-tag span { color: #00c897; font-weight: 700; }
 
   .form-area { padding: 20px 16px 0; }
 
   .section-title {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: #00c897;
-    margin: 22px 0 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
+    text-transform: uppercase; color: #00c897;
+    margin: 22px 0 12px; display: flex; align-items: center; gap: 6px;
   }
   .section-title:first-of-type { margin-top: 0; }
-  .section-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #1e3248;
-  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #1e3248; }
 
   .field { margin-bottom: 14px; }
-
-  label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: #cde0f0;
-    margin-bottom: 8px;
-    line-height: 1.4;
-  }
+  label { display: block; font-size: 13px; font-weight: 600; color: #cde0f0; margin-bottom: 8px; line-height: 1.4; }
 
   .radio-group { display: flex; flex-direction: column; gap: 7px; }
-
   .radio-pill {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #1a2a3a;
-    border: 1.5px solid #253d52;
-    border-radius: 10px;
-    padding: 11px 14px;
-    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    background: #1a2a3a; border: 1.5px solid #253d52; border-radius: 10px;
+    padding: 11px 14px; cursor: pointer;
     transition: border-color 0.15s, background 0.15s;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+    -webkit-tap-highlight-color: transparent; user-select: none;
   }
-
   .radio-pill input[type="radio"] { display: none; }
-
   .radio-pill .dot {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    border: 2px solid #3a5a75;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.15s;
+    width: 18px; height: 18px; border-radius: 50%; border: 2px solid #3a5a75;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   }
-
-  .radio-pill .dot::after {
-    content: '';
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: #00c897;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-
+  .radio-pill .dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #00c897; opacity: 0; transition: opacity 0.15s; }
   .radio-pill.selected { border-color: #00c897; background: #0d2a20; }
   .radio-pill.selected .dot { border-color: #00c897; }
   .radio-pill.selected .dot::after { opacity: 1; }
   .radio-pill span { font-size: 14px; color: #cde0f0; }
 
-  input[type="text"], input[type="tel"], select, textarea {
-    width: 100%;
-    background: #1a2a3a;
-    border: 1.5px solid #253d52;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 16px;
-    padding: 13px 14px;
-    outline: none;
-    -webkit-appearance: none;
-    transition: border-color 0.2s;
+  input[type="text"], input[type="tel"], textarea {
+    width: 100%; background: #1a2a3a; border: 1.5px solid #253d52;
+    border-radius: 10px; color: #fff; font-size: 16px; padding: 13px 14px;
+    outline: none; -webkit-appearance: none; transition: border-color 0.2s;
   }
-  input:focus, select:focus, textarea:focus { border-color: #00c897; }
-  select option { background: #1a2a3a; }
+  input:focus, textarea:focus { border-color: #00c897; }
   textarea { resize: none; height: 72px; font-size: 15px; }
-
-  .emp-row { display: flex; gap: 8px; }
-  .emp-row select { flex: 1; }
-  #empOutro { flex: 1; display: none; }
 
   .msg-final {
     background: linear-gradient(135deg, #0d2a20, #1a2a3a);
-    border: 1.5px solid #00c897;
-    border-radius: 14px;
-    padding: 16px;
-    margin: 20px 0;
-    text-align: center;
+    border: 1.5px solid #00c897; border-radius: 14px;
+    padding: 16px; margin: 20px 0; text-align: center;
   }
-  .msg-final p {
-    font-size: 14px;
-    color: #cde0f0;
-    line-height: 1.5;
-    font-style: italic;
-    margin-bottom: 8px;
-  }
+  .msg-final p { font-size: 14px; color: #cde0f0; line-height: 1.5; font-style: italic; margin-bottom: 8px; }
   .msg-final strong { font-size: 16px; color: #00c897; font-weight: 800; }
 
   .btn-salvar {
-    width: 100%;
-    background: #00c897;
-    color: #0f1923;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 800;
-    padding: 16px;
-    margin-bottom: 30px;
-    cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
-    -webkit-tap-highlight-color: transparent;
+    width: 100%; background: #00c897; color: #0f1923; border: none;
+    border-radius: 12px; font-size: 16px; font-weight: 800;
+    padding: 16px; margin-bottom: 30px; cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s; -webkit-tap-highlight-color: transparent;
   }
   .btn-salvar:active { opacity: 0.85; transform: scale(0.98); }
 
   .toast {
-    position: fixed;
-    top: 20px; left: 50%;
+    position: fixed; top: 20px; left: 50%;
     transform: translateX(-50%) translateY(-80px);
-    color: #0f1923;
-    font-weight: 800;
-    font-size: 14px;
-    padding: 12px 22px;
-    border-radius: 30px;
-    transition: transform 0.3s ease;
-    z-index: 999;
-    white-space: nowrap;
+    color: #0f1923; font-weight: 800; font-size: 14px;
+    padding: 12px 22px; border-radius: 30px;
+    transition: transform 0.3s ease; z-index: 999; white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
   .divider { height: 1px; background: #1a2a3a; }
-
-  .lista-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 16px 10px;
-  }
-  .lista-header h2 {
-    font-size: 12px; font-weight: 700;
-    color: #7a9ab5;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .btn-exportar {
-    background: transparent;
-    border: 1.5px solid #00c897;
-    color: #00c897;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 7px 14px;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
+  .lista-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 10px; }
+  .lista-header h2 { font-size: 12px; font-weight: 700; color: #7a9ab5; text-transform: uppercase; letter-spacing: 1px; }
+  .btn-exportar { background: transparent; border: 1.5px solid #00c897; color: #00c897; border-radius: 8px; font-size: 13px; font-weight: 700; padding: 7px 14px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .btn-exportar:active { background: #00c89722; }
 
   .lista { padding: 0 16px 100px; }
-
-  .card {
-    background: #1a2a3a;
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 10px;
-    border-left: 3px solid #00c897;
-    position: relative;
-  }
-
-  .card-nome  { font-size: 15px; font-weight: 700; margin-bottom: 3px; padding-right: 30px; }
-  .card-tel   { font-size: 14px; color: #7a9ab5; margin-bottom: 3px; }
-  .card-emp   { font-size: 12px; color: #00c897; font-weight: 600; }
-
-  .card-tags  { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
-  .tag {
-    font-size: 11px;
-    background: #0f1923;
-    border: 1px solid #253d52;
-    border-radius: 6px;
-    padding: 3px 8px;
-    color: #7a9ab5;
-  }
+  .card { background: #1a2a3a; border-radius: 12px; padding: 14px; margin-bottom: 10px; border-left: 3px solid #00c897; position: relative; }
+  .card-nome { font-size: 15px; font-weight: 700; margin-bottom: 3px; padding-right: 30px; }
+  .card-tel  { font-size: 14px; color: #7a9ab5; margin-bottom: 3px; }
+  .card-emp  { font-size: 12px; color: #00c897; font-weight: 600; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+  .tag { font-size: 11px; background: #0f1923; border: 1px solid #253d52; border-radius: 6px; padding: 3px 8px; color: #7a9ab5; }
   .tag.hot { border-color: #00c897; color: #00c897; }
-
-  .card-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-
-  .btn-wpp {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #25d366;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 8px 14px;
-    cursor: pointer;
-    text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: opacity 0.15s;
-  }
-  .btn-wpp:active { opacity: 0.8; }
-
+  .card-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+  .btn-wpp { display: flex; align-items: center; gap: 6px; background: #25d366; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; padding: 8px 14px; cursor: pointer; text-decoration: none; -webkit-tap-highlight-color: transparent; }
   .btn-wpp svg { width: 16px; height: 16px; fill: #fff; flex-shrink: 0; }
-
-  .card-del {
-    background: none;
-    border: none;
-    color: #3a5a75;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 4px 8px;
-    -webkit-tap-highlight-color: transparent;
-  }
-
+  .card-del { background: none; border: none; color: #3a5a75; font-size: 18px; cursor: pointer; padding: 4px 8px; -webkit-tap-highlight-color: transparent; }
   .card-hora { font-size: 11px; color: #3a5a75; }
+  .vazio { text-align: center; color: #3a5a75; font-size: 14px; padding: 30px 0; }
 
-  .vazio {
-    text-align: center;
-    color: #3a5a75;
-    font-size: 14px;
-    padding: 30px 0;
-  }
+  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #00c897; display: inline-block; margin-left: 5px; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 </style>
 </head>
 <body>
 
+<!-- MODAL NOME CORRETOR -->
+<div class="modal-overlay" id="modalCorretor">
+  <div class="modal-box">
+    <h2>🦅 Equipe Águia</h2>
+    <p>Olá! Antes de começar, informe seu nome para identificar suas captações.</p>
+    <input type="text" id="inputCorretor" placeholder="Seu nome completo" autocomplete="off">
+    <button class="modal-btn" onclick="confirmarCorretor()">Entrar</button>
+  </div>
+</div>
+
 <header>
   <div class="header-left">
     <h1>🦅 Equipe Águia</h1>
-    <p>Captação de Leads — Minha Casa Minha Vida</p>
+    <p>Captação MCMV</p>
   </div>
-  <span class="badge" id="contBadge">0 leads</span>
+  <div class="header-right">
+    <span class="badge" id="contBadge">0 leads</span>
+    <span class="corretor-tag">Corretor: <span id="nomeCorretorTag">—</span></span>
+  </div>
 </header>
 
 <div class="form-area">
@@ -353,25 +218,12 @@
   </div>
 
   <div class="field">
-    <label>🏠 Empreendimento de interesse</label>
-    <div class="emp-row">
-      <select id="empSelect">
-        <option value="">Selecione...</option>
-        <option>Next Guarulhos</option>
-        <option>Mirae</option>
-        <option>360 Park View</option>
-        <option>Supreme Anália</option>
-        <option>Modern Mooca</option>
-        <option>Urban Tatuapé</option>
-        <option>Neo Sacomã</option>
-        <option>Like Campo Limpo</option>
-        <option>Mérito BF</option>
-        <option>Bosque BF</option>
-        <option>Cidade Lapa Perdizes</option>
-        <option>Caminhos Liberdade</option>
-        <option value="__outro__">Outro...</option>
-      </select>
-      <input type="text" id="empOutro" placeholder="Nome do empreendimento">
+    <label>📍 Qual região considera morar?</label>
+    <div class="radio-group" id="q6">
+      <label class="radio-pill" onclick="sel(this,'q6')"><input type="radio" name="q6" value="Zona Sul"><div class="dot"></div><span>Zona Sul</span></label>
+      <label class="radio-pill" onclick="sel(this,'q6')"><input type="radio" name="q6" value="Zona Leste"><div class="dot"></div><span>Zona Leste</span></label>
+      <label class="radio-pill" onclick="sel(this,'q6')"><input type="radio" name="q6" value="Zona Oeste"><div class="dot"></div><span>Zona Oeste</span></label>
+      <label class="radio-pill" onclick="sel(this,'q6')"><input type="radio" name="q6" value="Zona Norte"><div class="dot"></div><span>Zona Norte</span></label>
     </div>
   </div>
 
@@ -400,7 +252,29 @@
 <div class="toast" id="toast"></div>
 
 <script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9J0lfvw5CMQkSzgx4H76Ot1k3VrWqD7fQuBLQ8u4tgKPuNgreKjDx4GNYlYf3d6q8sQ/exec';
+
   let leads = JSON.parse(localStorage.getItem('leads_mcmv_aguia') || '[]');
+  let corretor = localStorage.getItem('corretor_nome') || '';
+
+  // Modal corretor
+  if (corretor) {
+    document.getElementById('modalCorretor').style.display = 'none';
+    document.getElementById('nomeCorretorTag').textContent = corretor;
+  }
+
+  function confirmarCorretor() {
+    const nome = document.getElementById('inputCorretor').value.trim();
+    if (!nome) return;
+    corretor = nome;
+    localStorage.setItem('corretor_nome', corretor);
+    document.getElementById('modalCorretor').style.display = 'none';
+    document.getElementById('nomeCorretorTag').textContent = corretor;
+  }
+
+  document.getElementById('inputCorretor').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') confirmarCorretor();
+  });
 
   function sel(el, grupo) {
     document.querySelectorAll(`#${grupo} .radio-pill`).forEach(p => p.classList.remove('selected'));
@@ -413,41 +287,8 @@
     return el ? el.value : '';
   }
 
-  document.getElementById('empSelect').addEventListener('change', function() {
-    if (this.value === '__outro__') {
-      document.getElementById('empOutro').style.display = 'block';
-      this.style.display = 'none';
-      document.getElementById('empOutro').focus();
-    }
-  });
-
-  document.getElementById('empOutro').addEventListener('blur', function() {
-    if (!this.value.trim()) {
-      this.style.display = 'none';
-      const s = document.getElementById('empSelect');
-      s.style.display = 'block';
-      s.value = '';
-    }
-  });
-
-  function getEmp() {
-    const sel = document.getElementById('empSelect');
-    const outro = document.getElementById('empOutro');
-    if (outro.style.display === 'block') return outro.value.trim();
-    return sel.value === '__outro__' ? '' : sel.value;
-  }
-
-  function resetEmp() {
-    const sel = document.getElementById('empSelect');
-    const outro = document.getElementById('empOutro');
-    sel.value = ''; sel.style.display = 'block';
-    outro.value = ''; outro.style.display = 'none';
-  }
-
-  // Gera número limpo para link WA
   function numWpp(tel) {
     const digits = tel.replace(/\D/g, '');
-    // Se começar com 0, remove. Adiciona 55 (Brasil) se não tiver
     const clean = digits.replace(/^0+/, '');
     return clean.length >= 10 ? (clean.startsWith('55') ? clean : '55' + clean) : null;
   }
@@ -460,14 +301,14 @@
   function salvar() {
     const nome = document.getElementById('nome').value.trim();
     const tel  = document.getElementById('tel').value.trim();
-
     if (!nome) return showToast('⚠️ Informe o nome', '#e05c5c');
     if (!tel)  return showToast('⚠️ Informe o telefone', '#e05c5c');
 
     const lead = {
+      corretor,
       nome,
       tel,
-      emp:       getEmp() || '—',
+      emp:       getRadio('q6') || '—',
       aluguel:   getRadio('q1') || '—',
       vlAluguel: getRadio('q2') || '—',
       renda:     getRadio('q3') || '—',
@@ -481,14 +322,23 @@
     localStorage.setItem('leads_mcmv_aguia', JSON.stringify(leads));
     renderLista();
     showToast('✅ Lead salvo!', '#00c897');
+    enviarSheets(lead);
 
     document.getElementById('nome').value = '';
     document.getElementById('tel').value = '';
     document.getElementById('obs').value = '';
-    resetEmp();
     document.querySelectorAll('.radio-pill').forEach(p => p.classList.remove('selected'));
     document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
     document.getElementById('nome').focus();
+  }
+
+  function enviarSheets(lead) {
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lead)
+    }).catch(() => {});
   }
 
   function deletar(i) {
@@ -514,7 +364,7 @@
       <div class="card">
         <div class="card-nome">${esc(l.nome)}</div>
         <div class="card-tel">📱 ${esc(l.tel)}</div>
-        <div class="card-emp">🏠 ${esc(l.emp)}</div>
+        <div class="card-emp">📍 ${esc(l.emp)}</div>
         <div class="card-tags">
           ${l.interesse === 'Sim' ? '<span class="tag hot">✅ Quer apartamento</span>' : ''}
           ${l.aluguel === 'Sim'   ? '<span class="tag">Paga aluguel</span>' : ''}
@@ -525,7 +375,7 @@
           <span class="card-hora">${l.hora}</span>
           <div style="display:flex;gap:8px;align-items:center">
             ${link ? `<a class="btn-wpp" href="${link}" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               WhatsApp
             </a>` : '<span></span>'}
             <button class="card-del" onclick="deletar(${i})">✕</button>
@@ -542,13 +392,14 @@
   function exportar() {
     if (!leads.length) return showToast('Nenhum lead para exportar', '#e05c5c');
 
-    const ws_data = leads.map(l => {
+    const data = leads.map(l => {
       const n = numWpp(l.tel);
       return {
-        'Nome':                     l.nome,
+        'Corretor':                  l.corretor,
+        'Nome':                      l.nome,
         'Telefone':                  l.tel,
         'WhatsApp':                  n ? `https://wa.me/${n}` : '',
-        'Empreendimento':            l.emp,
+        'Região':                    l.emp,
         'Mora de aluguel?':          l.aluguel,
         'Valor do aluguel':          l.vlAluguel,
         'Renda familiar':            l.renda,
@@ -559,25 +410,17 @@
       };
     });
 
-    const ws = XLSX.utils.json_to_sheet(ws_data);
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws['!cols'] = [{wch:20},{wch:28},{wch:18},{wch:32},{wch:14},{wch:18},{wch:20},{wch:20},{wch:18},{wch:24},{wch:35},{wch:20}];
 
-    // Largura das colunas
-    ws['!cols'] = [
-      {wch:28},{wch:18},{wch:32},{wch:24},{wch:18},{wch:20},{wch:20},{wch:18},{wch:24},{wch:35},{wch:20}
-    ];
-
-    // Transformar coluna WhatsApp em HYPERLINK clicável no Excel
     const range = XLSX.utils.decode_range(ws['!ref']);
-    // Achar índice da coluna WhatsApp (coluna C = índice 2)
     for (let R = 1; R <= range.e.r; R++) {
-      const cellAddr = XLSX.utils.encode_cell({r: R, c: 2});
+      const cellAddr = XLSX.utils.encode_cell({r: R, c: 3});
       const cell = ws[cellAddr];
       if (cell && cell.v && String(cell.v).startsWith('http')) {
         const url = cell.v;
-        const lead = leads[R - 1];
-        cell.l = { Target: url, Tooltip: `Abrir WhatsApp de ${lead.nome}` };
-        cell.v = `📲 Chamar no WhatsApp`;
-        cell.s = { font: { color: { rgb: '25D366' }, underline: true } };
+        cell.l = { Target: url };
+        cell.v = '📲 Chamar no WhatsApp';
       }
     }
 
